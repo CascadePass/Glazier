@@ -19,7 +19,7 @@ jobs:
         dotnet-version: 9.0.x
 
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore src/Glazier.sln 
 
     - name: Build in Debug mode
       run: dotnet build src/Glazier.sln --configuration Debug

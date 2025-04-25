@@ -82,7 +82,7 @@
                 </StackPanel>
             </Border>
 
-            <Border Style="{StaticResource FormGroupBorderStyle}">
+            <Border x:Name="ImagePreviewSection" Style="{StaticResource ImagesBorderStyle}" Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />

@@ -1,7 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    
-    <SolidColorBrush x:Key="MainWindowBackgroundBrush" Color="{DynamicResource SystemColors.WindowColor}"/>
 
-    <SolidColorBrush x:Key="OuterBorderBrush" Color="{DynamicResource SystemColors.HighlightColor}"/>
+    <SolidColorBrush x:Key="MainWindowBackgroundBrush" Color="{DynamicResource SystemColors.WindowColor}"/>
+    <SolidColorBrush x:Key="ColorPickerBackgroundBrush" Color="{DynamicResource SystemColors.WindowColor}"/>
+
+    <SolidColorBrush x:Key="OuterBorderBrush" Color="{DynamicResource SystemColors.ControlDark}"/>
+    <SolidColorBrush x:Key="FormGroupBorderBrush" Color="{DynamicResource SystemColors.ActiveBorder}"/>
+    <SolidColorBrush x:Key="ContrastyBackgroundBrush" Color="{DynamicResource SystemColors.HighlightColor}"/>
+
+    <SolidColorBrush x:Key="FormLabelForeground" Color="{DynamicResource SystemColors.HighlightTextColor}" />
 </ResourceDictionary>

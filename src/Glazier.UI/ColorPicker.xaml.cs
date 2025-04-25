@@ -241,23 +241,9 @@ namespace CascadePass.Glazier.UI
 
                 this.SelectedColor = pixelColor;
                 this.ClosePopup();
-            }
-        }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is not Button button)
-            {
-                return;
+                e.Handled = true;
             }
-
-            if (button.Tag is not Color color)
-            {
-                return;
-            }
-
-            this.SelectedColor = color;
-            this.ClosePopup();
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -273,9 +259,9 @@ namespace CascadePass.Glazier.UI
             }
 
             this.SelectedColor = color;
-            e.Handled = true;
-
             this.ClosePopup();
+
+            e.Handled = true;
         }
 
         #endregion

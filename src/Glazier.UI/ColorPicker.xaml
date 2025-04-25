@@ -6,9 +6,6 @@
              xmlns:local="clr-namespace:CascadePass.Glazier.UI"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <!--<UserControl.Resources>
-        <SolidColorBrush x:Key="ColorBrush" Color="{Binding SelectedColor, RelativeSource={RelativeSource AncestorType=UserControl}}" />
-    </UserControl.Resources>-->
 
     <ToggleButton
         x:Name="ToggleButton"

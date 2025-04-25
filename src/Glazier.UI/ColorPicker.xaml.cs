@@ -19,7 +19,7 @@ namespace CascadePass.Glazier.UI
 
         public static readonly DependencyProperty SelectedColorProperty =
             DependencyProperty.Register("SelectedColor", typeof(Color), typeof(ColorPicker),
-                new PropertyMetadata(Colors.White, OnSelectedColorChanged));
+                new PropertyMetadata(Colors.Transparent, OnSelectedColorChanged));
 
         public static readonly DependencyProperty HexCodeProperty =
             DependencyProperty.Register("HexCode", typeof(string), typeof(ColorPicker),
@@ -78,6 +78,8 @@ namespace CascadePass.Glazier.UI
 
         #region Properties
 
+        #region Dependency Properties
+
         public Color SelectedColor
         {
             get => (Color)GetValue(SelectedColorProperty);
@@ -124,6 +126,10 @@ namespace CascadePass.Glazier.UI
         public ObservableCollection<NamedColor> AvailableColors { get; set; }
 
         public ObservableCollection<NamedColor> WindowsColors { get; set; }
+
+        #endregion
+
+        #region Methods
 
         public override void OnApplyTemplate()
         {
@@ -267,7 +273,11 @@ namespace CascadePass.Glazier.UI
             }
 
             this.SelectedColor = color;
+            e.Handled = true;
+
             this.ClosePopup();
         }
+
+        #endregion
     }
 }

@@ -11,7 +11,8 @@
         x:Name="ToggleButton"
         MinHeight="20"
         IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
-        Background="{Binding SelectedColor, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource colorToBrush}}">
+        Background="{Binding SelectedColor, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource colorToBrush}}"
+        ToolTip="{Binding SelectedColor, RelativeSource={RelativeSource AncestorType=UserControl}}">
         <Popup
             x:Name="Popup"
             StaysOpen="False"

@@ -12,8 +12,7 @@
 
     <LinearGradientBrush x:Key="FormGroupBorderBrush" StartPoint="0,0" EndPoint="1,1">
         <GradientStop Color="DarkBlue" Offset="0"/>
-        <GradientStop Color="Blue" Offset=".5"/>
-        <GradientStop Color="DarkSlateBlue" Offset="1"/>
+        <GradientStop Color="#000099" Offset="1"/>
     </LinearGradientBrush>
 
 

@@ -61,6 +61,8 @@ namespace CascadePass.Glazier.UI
             }
             else if (e.PropertyName == nameof(GlazierViewModel.ReplacementColor))
             {
+                this.ColorPicker.SelectedColor = ((GlazierViewModel)this.DataContext).ReplacementColor;
+
                 BindingExpression imageBinding = BindingOperations.GetBindingExpression(this.DisplayImage, Image.SourceProperty);
                 imageBinding?.UpdateTarget();
 

@@ -13,6 +13,8 @@
 
   <ItemGroup>
     <None Remove="Images\Background-ColorPicker.png" />
+    <None Remove="Images\Background2-Light.png" />
+    <None Remove="Images\Background3-Dark.png" />
     <None Remove="Images\Icons\Save.png" />
   </ItemGroup>
 
@@ -25,6 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\Background2-Light.png" />
+    <Resource Include="Images\Background3-Dark.png" />
     <Resource Include="Images\GlazierIcon.png" />
     <Resource Include="Images\Background-ColorPicker.png" />
     <Resource Include="Images\Background-Dark.png" />

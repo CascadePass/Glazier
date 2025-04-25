@@ -87,6 +87,9 @@ namespace CascadePass.Glazier.UI
 
                 BindingExpression labelBinding = BindingOperations.GetBindingExpression(this.InputFileLabel, TextBlock.VisibilityProperty);
                 labelBinding?.UpdateTarget();
+
+                BindingExpression borderBinding = BindingOperations.GetBindingExpression(this.ImagePreviewSection, TextBlock.VisibilityProperty);
+                borderBinding?.UpdateTarget();
             }
         }
 

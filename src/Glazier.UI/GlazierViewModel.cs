@@ -183,7 +183,6 @@ namespace CascadePass.Glazier.UI
                 B = color.Keys.First().B
             };
 
-
             this.GetMostCommonColors();
             this.GeneratePreviewImage();
         }

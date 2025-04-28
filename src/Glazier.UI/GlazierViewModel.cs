@@ -77,7 +77,15 @@ namespace CascadePass.Glazier.UI
         public Color ReplacementColor
         {
             get => this.replacementColor;
-            set => this.SetPropertyValue(ref this.replacementColor, value, [nameof(this.ReplacementColor), nameof(this.SimilarityPreview)]);
+            set
+            {
+                bool changed = this.SetPropertyValue(ref this.replacementColor, value, [nameof(this.ReplacementColor), nameof(this.SimilarityPreview)]);
+
+                if (changed && this.ImageData is not null)
+                {
+                    this.GeneratePreviewImage();
+                }
+            }
         }
 
         public ImageGlazier ImageGlazier

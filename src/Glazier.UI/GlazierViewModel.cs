@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using CascadePass.Glazier.Core;
+using Microsoft.Win32;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.ObjectModel;
@@ -137,7 +138,7 @@ namespace CascadePass.Glazier.UI
 
             if (this.ColorSimilarityThreshold > 0)
             {
-                tempGlazier.Glaze(this.ReplacementColor, this.ColorSimilarityThreshold);
+                tempGlazier.Glaze(ColorBridge.GetRgba32FromColor(this.ReplacementColor), this.ColorSimilarityThreshold);
             }
 
             this.PreviewImage = (BitmapImage)tempGlazier.ConvertToBitmapSource();
@@ -228,7 +229,7 @@ namespace CascadePass.Glazier.UI
             {
                 string filename = dialog.FileName;
 
-                this.ImageGlazier.Glaze(this.ReplacementColor, this.ColorSimilarityThreshold);
+                this.ImageGlazier.Glaze(ColorBridge.GetRgba32FromColor(this.ReplacementColor), this.ColorSimilarityThreshold);
                 this.ImageData = (BitmapImage)this.ImageGlazier.ConvertToBitmapSource();
                 this.ImageGlazier.SaveImage(filename);
 

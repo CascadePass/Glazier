@@ -43,7 +43,7 @@ namespace CascadePass.Glazier.UI
 
         public CommandTextBox()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         #region Dependency Properties (Getters/Setters)

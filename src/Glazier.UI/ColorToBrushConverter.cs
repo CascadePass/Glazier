@@ -14,6 +14,7 @@ namespace CascadePass.Glazier.UI
             {
                 return new SolidColorBrush(color);
             }
+
             return DependencyProperty.UnsetValue; // If conversion fails, return an unset value.
         }
 
@@ -23,6 +24,7 @@ namespace CascadePass.Glazier.UI
             {
                 return brush.Color;
             }
+
             return DependencyProperty.UnsetValue;
         }
     }

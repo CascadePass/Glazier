@@ -12,13 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Images\Background-ColorPicker.png" />
-    <None Remove="Images\Background2-Light.png" />
-    <None Remove="Images\Background3-Dark.png" />
-    <None Remove="Images\Icons\Save.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="Images\GlazierIcon.ico" />
   </ItemGroup>
 

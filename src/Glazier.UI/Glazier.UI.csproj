@@ -12,6 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Icons\Ruler.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Images\GlazierIcon.ico" />
   </ItemGroup>
 
@@ -29,6 +33,7 @@
     <Resource Include="Images\Background2-Dark.png" />
     <Resource Include="Images\Icons\FolderOpenBlue.png" />
     <Resource Include="Images\Icons\FolderOpened.png" />
+    <Resource Include="Images\Icons\Ruler.png" />
     <Resource Include="Images\Icons\Save.png" />
   </ItemGroup>
 

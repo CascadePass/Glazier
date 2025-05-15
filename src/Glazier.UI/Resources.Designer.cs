@@ -61,6 +61,15 @@ namespace CascadePass.Glazier.UI {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Algorithm.
+        /// </summary>
+        public static string Algorithm {
+            get {
+                return ResourceManager.GetString("Algorithm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to B.
         /// </summary>
         public static string B {
@@ -151,7 +160,7 @@ namespace CascadePass.Glazier.UI {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Color Similarity Threshold.
+        ///   Looks up a localized string similar to Similarity Threshold.
         /// </summary>
         public static string Label_Similarity {
             get {

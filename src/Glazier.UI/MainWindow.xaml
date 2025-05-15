@@ -16,28 +16,56 @@
     <Border Style="{StaticResource OuterBorderStyle}">
         <DockPanel LastChildFill="True">
             <Border DockPanel.Dock="Top" Style="{StaticResource FormGroupBorderStyle}">
-                <StackPanel>
+                <!--<Expander DockPanel.Dock="Top" Style="{StaticResource FormGroupExpanderStyle}" IsExpanded="True">-->
+                    <StackPanel>
+                        <TextBlock
+                            x:Name="InputFileLabel"
+                            Text="{x:Static local:Resources.Label_SourceFile}"
+                            Visibility="{Binding IsImageNeeded, Converter={StaticResource boolToVisibility}}"
+                            Style="{StaticResource FormLabel}"
+                            />
+
+                        <local:CommandTextBox
+                            x:Name="InputFile"
+                            InsetText="{x:Static local:Resources.Label_SourceFile}"
+                            InsetIcon="/Images/Icons/FolderOpenBlue.png"
+                            CommandIcon="/Images/Icons/FolderOpened.png"
+                            Command="{Binding BrowseForImageFileCommand}"
+                            Opacity=".7"
+                            UserText="{Binding SourceFilename}"
+                            Visibility="{Binding IsImageNeeded, Converter={StaticResource boolToVisibility}}"
+                            />
+
+                        
                     <TextBlock
-                        x:Name="InputFileLabel"
-                        Text="{x:Static local:Resources.Label_SourceFile}"
+                        x:Name="AlgorithmLabel"
+                        Text="{x:Static local:Resources.Algorithm}"
                         Visibility="{Binding IsImageNeeded, Converter={StaticResource boolToVisibility}}"
                         Style="{StaticResource FormLabel}"
                         />
 
-                    <local:CommandTextBox
-                        x:Name="InputFile"
-                        InsetText="{x:Static local:Resources.Label_SourceFile}"
-                        InsetIcon="/Images/Icons/FolderOpenBlue.png"
-                        CommandIcon="/Images/Icons/FolderOpened.png"
-                        Command="{Binding BrowseForImageFileCommand}"
-                        Opacity=".7"
-                        UserText="{Binding SourceFilename}"
-                        Visibility="{Binding IsImageNeeded, Converter={StaticResource boolToVisibility}}"
-                        />
+                    <ComboBox
+                        Margin="0,4,0,4"
+                        ItemsSource="{Binding GlazeMethods}"
+                        SelectedValue="{Binding GlazeMethod, Mode=TwoWay}"
+                        SelectedValuePath="Method"
+                        >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="{Binding IconPath}" Width="20" Height="20"/>
+                                    <TextBlock Text="{Binding Name}" Margin="5,0,0,0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
 
                     <TextBlock
+                        x:Name="ColorLabel"
                         Text="{x:Static local:Resources.Label_ReplacementColor}"
                         Style="{StaticResource FormLabel}"
+                        Visibility="{Binding IsColorNeeded, Converter={StaticResource boolToVisibility}}"
                         />
 
                     <local:ColorPicker
@@ -45,46 +73,49 @@
                         SelectedColor="{Binding ReplacementColor}"
                         SuggestedColors="{Binding ImageColors}"
                         Background="{Binding ReplacementColor, Converter={StaticResource colorToBrush}}"
+                        Visibility="{Binding IsColorNeeded, Converter={StaticResource boolToVisibility}}"
                         />
 
-                    <TextBlock
-                        Text="{x:Static local:Resources.Label_Similarity}"
-                        Style="{StaticResource FormLabel}"
-                        />
+                        <TextBlock
+                            Text="{x:Static local:Resources.Label_Similarity}"
+                            Style="{StaticResource FormLabel}"
+                            />
 
-                    <Slider
-                        x:Name="ColorTolerance"
-                        Minimum="0"
-                        Maximum="255"
-                        Margin="-3,0,0,0"
-                        Value="{Binding ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
-                        ToolTip="{Binding ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
-                        >
-                    </Slider>
+                        <Slider
+                            x:Name="ColorTolerance"
+                            Minimum="0"
+                            Maximum="255"
+                            Margin="-3,0,0,0"
+                            Value="{Binding ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
+                            ToolTip="{Binding ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
+                            >
+                        </Slider>
 
-                    <TextBlock
-                        x:Name="DestinationFileLabel"
-                        Text="{x:Static local:Resources.Label_DestinationFile}"
-                        Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}"
-                        Style="{StaticResource FormLabel}"
-                        />
+                        <TextBlock
+                            x:Name="DestinationFileLabel"
+                            Text="{x:Static local:Resources.Label_DestinationFile}"
+                            Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}"
+                            Style="{StaticResource FormLabel}"
+                            />
 
-                    <local:CommandTextBox
-                        x:Name="DestinationFile"
-                        InsetText="{x:Static local:Resources.Label_DestinationFile}"
-                        CommandIcon="/Images/Icons/Save.png"
-                        Command="{Binding SaveImageFileCommand}"
-                        Opacity=".7"
-                        UserText="{Binding SourceFilename}"
-                        Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}"
-                        />
+                        <local:CommandTextBox
+                            x:Name="DestinationFile"
+                            InsetText="{x:Static local:Resources.Label_DestinationFile}"
+                            CommandIcon="/Images/Icons/Save.png"
+                            Command="{Binding SaveImageFileCommand}"
+                            Opacity=".7"
+                            UserText="{Binding SourceFilename}"
+                            Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}"
+                            />
 
-                </StackPanel>
+                    </StackPanel>
+                <!--</Expander>-->
             </Border>
 
             <Border x:Name="ImagePreviewSection" Style="{StaticResource ImagesBorderStyle}" Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}">
                 <Grid>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
@@ -99,9 +130,17 @@
                     MouseDown="DisplayImage_MouseDown"
                     />
 
+                <GridSplitter
+                    Grid.Column="1"
+                    Width="3"
+                    Background="Transparent"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    ShowsPreview="True" />
+
                 <Image
                     x:Name="PreviewImage"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Source="{Binding PreviewImage}"
                     Stretch="Uniform"
                     VerticalAlignment="Center"

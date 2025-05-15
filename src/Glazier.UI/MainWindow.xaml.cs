@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -46,52 +47,56 @@ namespace CascadePass.Glazier.UI
         {
             if (e.PropertyName == nameof(GlazierViewModel.ImageData))
             {
-                BindingExpression binding = BindingOperations.GetBindingExpression(this.DisplayImage, Image.SourceProperty);
-                binding?.UpdateTarget();
+                this.UpdateBinding(BindingOperations.GetBindingExpression(this.DisplayImage, Image.SourceProperty));
             }
             else if (e.PropertyName == nameof(GlazierViewModel.PreviewImage))
             {
-                BindingExpression binding = BindingOperations.GetBindingExpression(this.PreviewImage, Image.SourceProperty);
-                binding?.UpdateTarget();
+                this.UpdateBinding(BindingOperations.GetBindingExpression(this.PreviewImage, Image.SourceProperty));
             }
             else if (e.PropertyName == nameof(GlazierViewModel.SourceFilename))
             {
-                BindingExpression binding = BindingOperations.GetBindingExpression(this.InputFile, CommandTextBox.UserTextProperty);
-                binding?.UpdateTarget();
+                this.UpdateBinding(BindingOperations.GetBindingExpression(this.InputFile, CommandTextBox.UserTextProperty));
             }
             else if (e.PropertyName == nameof(GlazierViewModel.ReplacementColor))
             {
                 this.ColorPicker.SelectedColor = ((GlazierViewModel)this.DataContext).ReplacementColor;
 
-                BindingExpression imageBinding = BindingOperations.GetBindingExpression(this.DisplayImage, Image.SourceProperty);
-                imageBinding?.UpdateTarget();
-
-                BindingExpression colorPickerBinding = BindingOperations.GetBindingExpression(this.ColorPicker, ColorPicker.SelectedColorProperty);
-                colorPickerBinding?.UpdateTarget();
-
-                BindingExpression colorPickerBackgroundBinding = BindingOperations.GetBindingExpression(this.ColorPicker, ColorPicker.BackgroundProperty);
-                colorPickerBackgroundBinding?.UpdateTarget();
+                this.UpdateBinding(BindingOperations.GetBindingExpression(this.DisplayImage, Image.SourceProperty));
+                this.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorPicker, ColorPicker.SelectedColorProperty));
+                this.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorPicker, ColorPicker.BackgroundProperty));
             }
             else if (e.PropertyName == nameof(GlazierViewModel.IsImageLoaded))
             {
-                BindingExpression binding = BindingOperations.GetBindingExpression(this.DestinationFile, CommandTextBox.VisibilityProperty);
-                binding?.UpdateTarget();
-
-                BindingExpression labelBinding = BindingOperations.GetBindingExpression(this.DestinationFileLabel, TextBlock.VisibilityProperty);
-                labelBinding?.UpdateTarget();
+                this.UpdateBinding(BindingOperations.GetBindingExpression(this.DestinationFile, CommandTextBox.VisibilityProperty));
+                this.UpdateBinding(BindingOperations.GetBindingExpression(this.DestinationFileLabel, TextBlock.VisibilityProperty));
             }
             else if (e.PropertyName == nameof(GlazierViewModel.IsImageNeeded))
             {
-                BindingExpression binding = BindingOperations.GetBindingExpression(this.InputFile, CommandTextBox.VisibilityProperty);
-                binding?.UpdateTarget();
-
-                BindingExpression labelBinding = BindingOperations.GetBindingExpression(this.InputFileLabel, TextBlock.VisibilityProperty);
-                labelBinding?.UpdateTarget();
-
-                BindingExpression borderBinding = BindingOperations.GetBindingExpression(this.ImagePreviewSection, TextBlock.VisibilityProperty);
-                borderBinding?.UpdateTarget();
+                this.UpdateBinding(BindingOperations.GetBindingExpression(this.ImagePreviewSection, TextBlock.VisibilityProperty));
+            }
+            else if (e.PropertyName == nameof(GlazierViewModel.IsColorNeeded))
+            {
+                this.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorPicker, TextBlock.VisibilityProperty));
+                this.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorLabel, TextBlock.VisibilityProperty));
             }
         }
+
+        private void UpdateBinding(BindingExpression binding)
+        {
+            if (binding?.Target is DependencyObject target)
+            {
+                var dispatcher = Dispatcher;
+                if (dispatcher != null && !dispatcher.CheckAccess())
+                {
+                    dispatcher.Invoke(() => binding.UpdateTarget());
+                }
+                else
+                {
+                    binding.UpdateTarget();
+                }
+            }
+        }
+
 
         private void DisplayImage_MouseDown(object sender, MouseButtonEventArgs e)
         {

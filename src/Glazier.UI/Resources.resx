@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Algorithm" xml:space="preserve">
+    <value>Algorithm</value>
+  </data>
   <data name="B" xml:space="preserve">
     <value>B</value>
   </data>
@@ -148,7 +151,7 @@
     <value>Replace Color</value>
   </data>
   <data name="Label_Similarity" xml:space="preserve">
-    <value>Color Similarity Threshold</value>
+    <value>Similarity Threshold</value>
   </data>
   <data name="Label_SourceFile" xml:space="preserve">
     <value>Source image file</value>

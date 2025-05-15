@@ -108,6 +108,14 @@
         <Setter Property="Background" Value="Transparent"/>
     </Style>
 
+    <Style x:Key="FormGroupExpanderStyle" TargetType="Expander">
+        <Setter Property="BorderBrush" Value="{StaticResource FormGroupBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="0.5"/>
+        <Setter Property="Margin" Value="5,2,5,2"/>
+        <Setter Property="Padding" Value="15"/>
+        <Setter Property="Background" Value="Transparent"/>
+    </Style>
+
     <Style x:Key="ImagesBorderStyle" TargetType="Border" BasedOn="{StaticResource FormGroupBorderStyle}">
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">

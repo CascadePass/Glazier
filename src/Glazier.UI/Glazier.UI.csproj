@@ -12,7 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Icons\ColorDialog.png" />
+    <None Remove="Images\Icons\ColorPalette.png" />
     <None Remove="Images\Icons\Ruler.png" />
+    <None Remove="Images\Icons\Settings.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,10 +34,13 @@
     <Resource Include="Images\Background-Dark.png" />
     <Resource Include="Images\Background-Light.png" />
     <Resource Include="Images\Background2-Dark.png" />
+    <Resource Include="Images\Icons\ColorDialog.png" />
+    <Resource Include="Images\Icons\ColorPalette.png" />
     <Resource Include="Images\Icons\FolderOpenBlue.png" />
     <Resource Include="Images\Icons\FolderOpened.png" />
     <Resource Include="Images\Icons\Ruler.png" />
     <Resource Include="Images\Icons\Save.png" />
+    <Resource Include="Images\Icons\Settings.png" />
   </ItemGroup>
 
   <ItemGroup>

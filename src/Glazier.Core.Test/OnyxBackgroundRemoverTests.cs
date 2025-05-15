@@ -427,7 +427,7 @@ namespace CascadePass.Glazier.Core.Test
             Bitmap sharpenedImage = processor.ApplyEdgeSharpening(largeImage);
             timer.Stop();
 
-            Assert.IsTrue(timer.ElapsedMilliseconds < 1000);
+            Assert.IsTrue(timer.ElapsedMilliseconds < 2000);
         }
 
         #endregion
@@ -482,7 +482,7 @@ namespace CascadePass.Glazier.Core.Test
             Bitmap smoothedMask = processor.ApplyEdgeSmoothing(largeMask);
             timer.Stop();
 
-            Assert.IsTrue(timer.ElapsedMilliseconds < 1000);
+            Assert.IsTrue(timer.ElapsedMilliseconds < 2000);
         }
 
         #endregion

@@ -12,12 +12,16 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 using Bitmap = System.Drawing.Bitmap;
+using Size = System.Windows.Size;
 
 #endregion
 
@@ -27,16 +31,22 @@ namespace CascadePass.Glazier.UI
     {
         #region Fields
 
+        public bool isViewingMask;
         private int colorSimilarity;
         private string sourceFilename;
         private BitmapImage image, previewImage;
         private Color replacementColor;
         private ObservableCollection<NamedColor> commonImageColors;
+        private ObservableCollection<SizeViewModel> imageOutputSizes;
+        private SizeViewModel outputSize;
+
         private GlazeMethod glazeMethod;
         private ImageGlazier imageGlazier;
         private OnyxBackgroundRemover onyx;
 
-        private DelegateCommand browseForImageFile, saveImageData;
+        private object threadKey;
+
+        private DelegateCommand browseForImageFile, saveImageData, viewLargePreviewCommand, viewMaskCommand;
 
         private CancellationTokenSource mlProcessingCancellationToken;
         private readonly DispatcherTimer debounceTimer;
@@ -50,11 +60,28 @@ namespace CascadePass.Glazier.UI
             this.commonImageColors = [];
             this.colorSimilarity = 30;
 
-            this.onyx = new(@"C:\dev\u2net.onnx");
+            this.imageOutputSizes = [];
+
+            this.threadKey = new();
+
             this.GlazeMethod = GlazeMethod.MachineLearning;
 
-            debounceTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
-            debounceTimer.Tick += this.ApplyDebouncedThreshold;
+            this.debounceTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
+            this.debounceTimer.Tick += this.ApplyDebouncedThreshold;
+
+            BindingOperations.EnableCollectionSynchronization(this.imageOutputSizes, this.threadKey);
+
+
+
+            //TODO: Read from config file
+            this.Sizes.Add(new(new(16, 16)));
+            this.Sizes.Add(new(new(32, 32)));
+            this.Sizes.Add(new(new(64, 64)));
+            this.Sizes.Add(new(new(128, 128)));
+            this.Sizes.Add(new(new(256, 256)));
+
+            //TODO: Read model location from config file?
+            this.LoadOnyxModel();
         }
 
         #region Properties
@@ -92,7 +119,7 @@ namespace CascadePass.Glazier.UI
         public BitmapImage ImageData
         {
             get => this.image;
-            set => this.SetPropertyValue(ref this.image, value, [nameof(this.ImageData), nameof(this.IsImageLoaded), nameof(this.IsImageNeeded)]);
+            set => this.SetPropertyValue(ref this.image, value, [nameof(this.ImageData), nameof(this.IsImageLoaded), nameof(this.IsImageNeeded), nameof(this.Sizes)]);
         }
 
         public BitmapImage PreviewImage
@@ -141,10 +168,38 @@ namespace CascadePass.Glazier.UI
         public GlazeMethod GlazeMethod
         {
             get => this.glazeMethod;
-            set => this.SetPropertyValue(ref this.glazeMethod, value, [nameof(this.GlazeMethod), nameof(this.IsColorNeeded)]);
+            set
+            {
+                bool changed = this.SetPropertyValue(ref this.glazeMethod, value, [nameof(this.GlazeMethod), nameof(this.IsColorNeeded)]);
+
+                if (changed)
+                {
+                    this.GeneratePreviewImage();
+                }
+            }
         }
 
         public IEnumerable<GlazeMethodViewModel> GlazeMethods => GlazeMethodViewModel.GetMethods();
+
+        public ObservableCollection<SizeViewModel> Sizes
+        {
+            get => this.imageOutputSizes;
+            set => this.SetPropertyValue(ref this.imageOutputSizes, value, nameof(this.Sizes));
+        }
+
+        public SizeViewModel SelectedSize
+        {
+            get => this.outputSize;
+            set => this.SetPropertyValue(ref this.outputSize, value, nameof(this.SelectedSize));
+        }
+
+        public bool IsMaskVisible
+        {
+            get => this.isViewingMask;
+            set => this.SetPropertyValue(ref this.isViewingMask, value, nameof(this.IsMaskVisible));
+        }
+
+        public bool IsSourceFilenameValid => !string.IsNullOrEmpty(this.SourceFilename) && File.Exists(this.SourceFilename);
 
         #region Visibility
 
@@ -162,9 +217,15 @@ namespace CascadePass.Glazier.UI
 
         public ICommand SaveImageFileCommand => this.saveImageData ??= new(this.SaveImageImplementation);
 
+        public ICommand ViewLargePreviewCommand => this.viewLargePreviewCommand ??= new(this.ViewLargePreviewImplementation);
+
+        public ICommand ViewMaskCommand => this.viewMaskCommand ??= new(this.ViewMaskImplementation);
+
         #endregion
 
         #endregion
+
+        #region Methods
 
         internal void GeneratePreviewImage()
         {
@@ -176,8 +237,6 @@ namespace CascadePass.Glazier.UI
             {
                 this.GenerateOnyxPreview();
             }
-
-            this.OnPropertyChanged(nameof(this.ImageData));
         }
 
         internal void GenerateColorReplacementPreview()
@@ -199,6 +258,11 @@ namespace CascadePass.Glazier.UI
         internal void GenerateOnyxPreview()
         {
             this.CancelPreviousProcessing();
+
+            if (this.onyx is null)
+            {
+                return;
+            }
 
             Task.Run(() =>
             {
@@ -252,24 +316,52 @@ namespace CascadePass.Glazier.UI
             }
         }
 
+        internal void LoadOnyxModel()
+        {
+            try
+            {                
+                this.onyx = new(@"C:\dev\u2net.onnx");
+            }
+            catch (Exception)
+            {
+            }
+        }
+
         internal void LoadSourceImage()
         {
-            if (string.IsNullOrEmpty(this.SourceFilename))
+            if (!this.IsSourceFilenameValid)
             {
                 return;
             }
 
-            if (!File.Exists(this.SourceFilename))
+            if (this.ImageData is not null)
             {
-                return;
+                Size imageSize = new(this.ImageData.PixelWidth, this.ImageData.PixelHeight);
+                SizeViewModel existingSize = this.Sizes.FirstOrDefault(s => s.Size == imageSize);
+
+                if (existingSize != null)
+                {
+                    this.Sizes.Remove(existingSize);
+                }
             }
 
             var bitmap = new BitmapImage();
-            bitmap.BeginInit();
-            bitmap.UriSource = new Uri(this.SourceFilename, UriKind.Absolute);
-            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-            bitmap.EndInit();
-            bitmap.Freeze(); // Ensures it's usable across threads
+
+            try
+            {
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(this.SourceFilename, UriKind.Absolute);
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.EndInit();
+                bitmap.Freeze();
+            }
+            catch (Exception ex)
+            {
+                //TODO: Improve this
+
+                MessageBox.Show(ex.Message);
+                return;
+            }
 
             this.ImageData = bitmap;
             this.ImageGlazier.LoadImage(this.SourceFilename);
@@ -290,6 +382,23 @@ namespace CascadePass.Glazier.UI
 
             this.GetMostCommonColors();
             this.GeneratePreviewImage();
+
+            if (this.ImageData is not null)
+            {
+                Size imageSize = new(this.ImageData.PixelWidth, this.ImageData.PixelHeight);
+                SizeViewModel existingSize = this.Sizes.FirstOrDefault(s => s.Size == imageSize);
+
+                if (existingSize != null)
+                {
+                    this.SelectedSize = existingSize;
+                }
+                else
+                {
+                    SizeViewModel imageSizeVM = new(imageSize);
+                    this.Sizes.Add(imageSizeVM);
+                    this.SelectedSize = imageSizeVM;
+                }
+            }
         }
 
         private void ApplyDebouncedThreshold(object sender, EventArgs e)
@@ -315,7 +424,7 @@ namespace CascadePass.Glazier.UI
         {
             this.ImageGlazier.Glaze(ColorBridge.GetRgba32FromColor(this.ReplacementColor), this.ColorSimilarityThreshold);
             this.ImageData = (BitmapImage)this.ImageGlazier.ConvertToBitmapSource();
-            this.ImageGlazier.SaveImage(filename);
+            this.ImageGlazier.SaveImage(filename/*, this.outputSize.Size*/);
         }
 
         internal void SaveOnyxImage(string filename)
@@ -328,12 +437,39 @@ namespace CascadePass.Glazier.UI
 
                 if (processedImage != null && !this.mlProcessingCancellationToken.Token.IsCancellationRequested)
                 {
-                    processedImage.Save(filename, ImageFormat.Png);
+                    Size currentSize = new(this.ImageData.PixelWidth, this.ImageData.PixelHeight);
+
+                    if (currentSize == this.outputSize.Size)
+                    {
+                        processedImage.Save(filename, ImageFormat.Png);
+                    }
+                    else
+                    {
+                        var resizedImage = this.ResizeBitmap(processedImage, this.outputSize.Size);
+                        resizedImage.Save(filename, ImageFormat.Png);
+                    }
                 }
             });
 
             // Cancel the operation after 15 seconds
             Task.Delay(15000).ContinueWith(_ => mlProcessingCancellationToken.Cancel());
+        }
+
+        public Bitmap ResizeBitmap(Bitmap original, Size newSize)
+        {
+            int newWidth = (int)newSize.Width, newHeight = (int)newSize.Height;
+            Bitmap resizedBitmap = new(newWidth, newHeight);
+
+            using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(resizedBitmap))
+            {
+                graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+
+                graphics.DrawImage(original, 0, 0, newWidth, newHeight);
+            }
+
+            return resizedBitmap;
         }
 
         #region Command Implementations
@@ -387,6 +523,53 @@ namespace CascadePass.Glazier.UI
                 }
             }
         }
+
+        private void ViewMaskImplementation()
+        {
+            if (this.IsMaskVisible)
+            {
+                using MemoryStream memoryStream = new();
+                this.onyx.Mask.Save(memoryStream, ImageFormat.Png);
+                memoryStream.Position = 0;
+
+                BitmapImage bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memoryStream;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                bitmapImage.Freeze();
+
+                this.PreviewImage = bitmapImage;
+            }
+            else
+            {
+                // User may have edited the mask.
+                this.GeneratePreviewImage();
+            }
+        }
+
+        private void ViewLargePreviewImplementation()
+        {
+            var backgroundBrush = Application.Current?.Resources?["CrosshatchBrush"] as Brush;
+
+            Image image = new()
+            {
+                Source = this.PreviewImage,
+                Stretch = Stretch.Uniform,
+            };
+
+            Window previewWindow = new()
+            {
+                Title = "Preview Image",
+                Content = image,
+                WindowState = WindowState.Maximized,
+                Background = backgroundBrush,
+            };
+
+            previewWindow.ShowDialog();
+        }
+
+        #endregion
 
         #endregion
     }

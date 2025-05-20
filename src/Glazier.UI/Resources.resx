@@ -147,6 +147,9 @@
   <data name="Label_Files" xml:space="preserve">
     <value>Files</value>
   </data>
+  <data name="Label_OutputSize" xml:space="preserve">
+    <value>Size:</value>
+  </data>
   <data name="Label_ReplacementColor" xml:space="preserve">
     <value>Replace Color</value>
   </data>
@@ -161,5 +164,8 @@
   </data>
   <data name="Red" xml:space="preserve">
     <value>Red</value>
+  </data>
+  <data name="x" xml:space="preserve">
+    <value>x</value>
   </data>
 </root>

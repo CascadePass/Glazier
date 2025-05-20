@@ -20,6 +20,7 @@
             PlacementTarget="{Binding ElementName=ToggleButton}"
             IsOpen="{Binding IsExpanded, RelativeSource={RelativeSource AncestorType=UserControl}}"
             Width="{Binding ElementName=ToggleButton, Path=ActualWidth}"
+            MinWidth="450" MaxHeight="500"
             >
             <Border BorderBrush="Black" BorderThickness="1" CornerRadius="6" Padding="10" Background="LightGray">
                 <DockPanel LastChildFill="True">

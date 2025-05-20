@@ -13,10 +13,12 @@
         <local:GlazierViewModel />
     </Window.DataContext>
 
-    <Border Style="{StaticResource OuterBorderStyle}">
+    <!--<Border Style="{StaticResource OuterBorderStyle}">-->
         <DockPanel LastChildFill="True">
-            <Border DockPanel.Dock="Top" Style="{StaticResource FormGroupBorderStyle}">
-                <!--<Expander DockPanel.Dock="Top" Style="{StaticResource FormGroupExpanderStyle}" IsExpanded="True">-->
+            <Border
+                x:Name="InputFormBorder"
+                DockPanel.Dock="Top"
+                Style="{StaticResource OuterBorderStyle}">
                     <StackPanel>
                         <TextBlock
                             x:Name="InputFileLabel"
@@ -50,15 +52,16 @@
                         SelectedValue="{Binding GlazeMethod, Mode=TwoWay}"
                         SelectedValuePath="Method"
                         >
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="{Binding IconPath}" Width="20" Height="20"/>
-                                    <TextBlock Text="{Binding Name}" Margin="5,0,0,0"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{Binding IconPath}" Width="20" Height="20" />
+                                        <TextBlock Text="{Binding Name}" Margin="5,0,0,0" />
+                                        <TextBlock Text="{Binding Description}" Margin="5,0,0,0" FontStyle="Italic" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
 
 
                     <TextBlock
@@ -76,22 +79,7 @@
                         Visibility="{Binding IsColorNeeded, Converter={StaticResource boolToVisibility}}"
                         />
 
-                        <TextBlock
-                            Text="{x:Static local:Resources.Label_Similarity}"
-                            Style="{StaticResource FormLabel}"
-                            />
-
-                        <Slider
-                            x:Name="ColorTolerance"
-                            Minimum="0"
-                            Maximum="255"
-                            Margin="-3,0,0,0"
-                            Value="{Binding ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
-                            ToolTip="{Binding ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
-                            >
-                        </Slider>
-
-                        <TextBlock
+                        <!--<TextBlock
                             x:Name="DestinationFileLabel"
                             Text="{x:Static local:Resources.Label_DestinationFile}"
                             Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}"
@@ -106,17 +94,27 @@
                             Opacity=".7"
                             UserText="{Binding SourceFilename}"
                             Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}"
-                            />
+                            />-->
 
                     </StackPanel>
-                <!--</Expander>-->
             </Border>
+
+            <Slider
+                x:Name="ColorTolerance"
+                DockPanel.Dock="Bottom"
+                Minimum="0"
+                Maximum="255"
+                Margin="-3,0,0,0"
+                Value="{Binding ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="{Binding ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
+                >
+            </Slider>
 
             <Border x:Name="ImagePreviewSection" Style="{StaticResource ImagesBorderStyle}" Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="3" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
@@ -138,18 +136,21 @@
                     HorizontalAlignment="Stretch"
                     ShowsPreview="True" />
 
-                <Image
-                    x:Name="PreviewImage"
-                    Grid.Column="2"
-                    Source="{Binding PreviewImage}"
-                    Stretch="Uniform"
-                    VerticalAlignment="Center"
-                    MouseDown="DisplayImage_MouseDown"
-                    />
+                    <Grid Grid.Column="2">
+                        <Image
+                            x:Name="PreviewImage"                    
+                            Source="{Binding PreviewImage}"
+                            Stretch="Uniform"
+                            VerticalAlignment="Center"
+                            MouseDown="DisplayImage_MouseDown"
+                            />
+
+                        <local:LivePreviewToolbar BackgroundRemovalMethod="{Binding GlazeMethod}" />
+                    </Grid>
 
                 </Grid>
             </Border>
         </DockPanel>
-    </Border>
+    <!--</Border>-->
 
 </local:ThemeListener>

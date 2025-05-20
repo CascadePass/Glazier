@@ -151,6 +151,15 @@ namespace CascadePass.Glazier.UI {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Size:.
+        /// </summary>
+        public static string Label_OutputSize {
+            get {
+                return ResourceManager.GetString("Label_OutputSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Replace Color.
         /// </summary>
         public static string Label_ReplacementColor {
@@ -192,6 +201,15 @@ namespace CascadePass.Glazier.UI {
         public static string Red {
             get {
                 return ResourceManager.GetString("Red", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to x.
+        /// </summary>
+        public static string x {
+            get {
+                return ResourceManager.GetString("x", resourceCulture);
             }
         }
     }

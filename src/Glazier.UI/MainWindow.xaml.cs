@@ -1,9 +1,11 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
 namespace CascadePass.Glazier.UI
@@ -65,20 +67,57 @@ namespace CascadePass.Glazier.UI
                 this.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorPicker, ColorPicker.SelectedColorProperty));
                 this.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorPicker, ColorPicker.BackgroundProperty));
             }
-            else if (e.PropertyName == nameof(GlazierViewModel.IsImageLoaded))
-            {
-                this.UpdateBinding(BindingOperations.GetBindingExpression(this.DestinationFile, CommandTextBox.VisibilityProperty));
-                this.UpdateBinding(BindingOperations.GetBindingExpression(this.DestinationFileLabel, TextBlock.VisibilityProperty));
-            }
+            //else if (e.PropertyName == nameof(GlazierViewModel.IsImageLoaded))
+            //{
+            //    this.UpdateBinding(BindingOperations.GetBindingExpression(this.DestinationFile, CommandTextBox.VisibilityProperty));
+            //    this.UpdateBinding(BindingOperations.GetBindingExpression(this.DestinationFileLabel, TextBlock.VisibilityProperty));
+            //}
             else if (e.PropertyName == nameof(GlazierViewModel.IsImageNeeded))
             {
                 this.UpdateBinding(BindingOperations.GetBindingExpression(this.ImagePreviewSection, TextBlock.VisibilityProperty));
+
+                this.HideInputForm();
+
             }
             else if (e.PropertyName == nameof(GlazierViewModel.IsColorNeeded))
             {
                 this.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorPicker, TextBlock.VisibilityProperty));
                 this.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorLabel, TextBlock.VisibilityProperty));
             }
+        }
+
+        private void HideInputForm()
+        {
+            var animation = new DoubleAnimation
+            {
+                From = this.InputFormBorder.ActualHeight,
+                To = 0,
+                Duration = TimeSpan.FromSeconds(0.5)
+            };
+
+            var storyboard = new Storyboard();
+            Storyboard.SetTarget(animation, this.InputFormBorder);
+            Storyboard.SetTargetProperty(animation, new PropertyPath("Height"));
+
+            storyboard.Children.Add(animation);
+            storyboard.Begin();
+        }
+
+        private void ShowInputForm(double originalHeight)
+        {
+            var animation = new DoubleAnimation
+            {
+                From = 0,
+                To = originalHeight,
+                Duration = TimeSpan.FromSeconds(0.5)
+            };
+
+            var storyboard = new Storyboard();
+            Storyboard.SetTarget(animation, this.InputFormBorder);
+            Storyboard.SetTargetProperty(animation, new PropertyPath("Height"));
+
+            storyboard.Children.Add(animation);
+            storyboard.Begin();
         }
 
         private void UpdateBinding(BindingExpression binding)

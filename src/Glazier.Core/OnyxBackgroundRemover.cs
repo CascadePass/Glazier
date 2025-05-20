@@ -6,6 +6,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace CascadePass.Glazier.Core
     {
         #region Fields
 
-        private readonly InferenceSession session;
+        private InferenceSession session;
         private Tensor<float> cachedTensor;
         private Bitmap cachedImage;
 
@@ -35,10 +36,7 @@ namespace CascadePass.Glazier.Core
 
         public OnyxBackgroundRemover(string modelPath) : this()
         {
-            if (!string.IsNullOrWhiteSpace(modelPath))
-            {
-                this.session = new InferenceSession(modelPath);
-            }
+            this.LoadModel(modelPath);
         }
 
         #endregion
@@ -57,9 +55,38 @@ namespace CascadePass.Glazier.Core
 
         public OnyxProcessingMode ProcessingMode { get; set; }
 
+        public Bitmap Mask { get; set; }
+
         #endregion
 
         #region Methods
+
+        public void LoadModel(string modelPath)
+        {
+            if (!string.IsNullOrWhiteSpace(modelPath) && File.Exists(modelPath))
+            {
+                var sessionOptions = new SessionOptions();
+
+                try
+                {
+                    // Use GPU if available
+                    sessionOptions.AppendExecutionProvider_CUDA();
+                }
+                catch (Exception)
+                {
+                    // CUDA not available, falling back to CPU.
+                    sessionOptions.AppendExecutionProvider_CPU();
+                }
+
+                try
+                {
+                    this.session = new InferenceSession(modelPath, sessionOptions);
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
 
         #region Remove Background
 
@@ -87,8 +114,9 @@ namespace CascadePass.Glazier.Core
                 return null;
             }
 
-            using Bitmap scaledMask = this.UpscaleImage(mask, this.GetCachedImage().Size);
-            return await this.ApplyMaskToImage(this.GetCachedImage(), scaledMask, tolerance, cancellationToken);
+            //using Bitmap scaledMask = this.UpscaleImage(mask, this.GetCachedImage().Size);
+            Mask = this.UpscaleImage(mask, this.GetCachedImage().Size);
+            return await this.ApplyMaskToImage(this.GetCachedImage(), Mask, tolerance, cancellationToken);
         }
 
         #endregion

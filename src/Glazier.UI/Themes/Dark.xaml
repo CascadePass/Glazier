@@ -4,6 +4,14 @@
     <ImageBrush x:Key="MainWindowBackgroundBrush" ImageSource="/Images/Background3-Dark.png" Stretch="UniformToFill"/>
     <ImageBrush x:Key="ColorPickerBackgroundBrush" ImageSource="/Images/Background-ColorPicker.png" Stretch="UniformToFill" Opacity=".2" />
 
+    <SolidColorBrush x:Key="CheckerboardBackgroundBrush" Color="DimGray"/>
+    <SolidColorBrush x:Key="CheckerboardForegroundBrush" Color="Black"/>
+    <SolidColorBrush x:Key="ToggleButtonSelectedOutlineBrush" Color="Blue"/>
+    <SolidColorBrush x:Key="ToggleButtonSelectedMouseOverBrush" Color="Red"/>
+    <SolidColorBrush x:Key="ToolbarBackgroundBrush" Color="LightGray"/>
+    <SolidColorBrush x:Key="ToolbarBorderBrush" Color="DarkGray"/>
+
+
     <LinearGradientBrush x:Key="OuterBorderBrush" StartPoint="0,0" EndPoint="1,1">
         <GradientStop Color="DarkRed" Offset="0"/>
         <GradientStop Color="Black" Offset=".5"/>

@@ -4,6 +4,14 @@
     <SolidColorBrush x:Key="MainWindowBackgroundBrush" Color="{DynamicResource SystemColors.WindowColor}"/>
     <SolidColorBrush x:Key="ColorPickerBackgroundBrush" Color="{DynamicResource SystemColors.WindowColor}"/>
 
+    <SolidColorBrush x:Key="CheckerboardBackgroundBrush" Color="Black"/>
+    <SolidColorBrush x:Key="CheckerboardForegroundBrush" Color="White"/>
+    <SolidColorBrush x:Key="ToggleButtonSelectedOutlineBrush" Color="Gray"/>
+    <SolidColorBrush x:Key="ToggleButtonSelectedMouseOverBrush" Color="Black"/>
+    <SolidColorBrush x:Key="ToolbarBackgroundBrush" Color="LightGray"/>
+    <SolidColorBrush x:Key="ToolbarBorderBrush" Color="DarkGray"/>
+
+
     <SolidColorBrush x:Key="OuterBorderBrush" Color="{DynamicResource SystemColors.ControlDark}"/>
     <SolidColorBrush x:Key="FormGroupBorderBrush" Color="{DynamicResource SystemColors.ActiveBorder}"/>
     <SolidColorBrush x:Key="ContrastyBackgroundBrush" Color="{DynamicResource SystemColors.HighlightColor}"/>

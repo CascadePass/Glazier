@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,10 +18,14 @@ namespace CascadePass.Glazier.UI
     /// </summary>
     public partial class MainWindow : ThemeListener
     {
+        private string[] supportedExtensions;
+
         public MainWindow()
         {
             base.ApplyTheme();
             this.InitializeComponent();
+
+            this.supportedExtensions = [".png", ".jpg", ".bmp", ".tiff", ".tif"];
 
             var vm = this.DataContext as ViewModel;
 
@@ -136,7 +143,6 @@ namespace CascadePass.Glazier.UI
             }
         }
 
-
         private void DisplayImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is Image image && this.DataContext is GlazierViewModel glazier)
@@ -153,5 +159,70 @@ namespace CascadePass.Glazier.UI
             }
         }
 
+        #region Drag and Drop
+
+        private void Window_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                string file = files.FirstOrDefault(f => this.supportedExtensions.Contains(Path.GetExtension(f).ToLower()));
+
+                if (file is not null)
+                {
+                    if(this.DataContext is GlazierViewModel vm)
+                    {
+                        vm.SourceFilename = file;
+                    }
+                }
+            }
+
+            Mouse.OverrideCursor = null;
+            e.Effects = DragDropEffects.None;
+        }
+
+        private void Window_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                bool isValid = files.Any(f => this.supportedExtensions.Contains(Path.GetExtension(f).ToLower()));
+
+                e.Effects = isValid ? DragDropEffects.Copy : DragDropEffects.None;
+                Mouse.OverrideCursor = isValid ? Cursors.Arrow : Cursors.No; // Updates dynamically
+            }
+        }
+
+        private void Window_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+                if (files.Length > 0)
+                {
+                    string fileExtension = Path.GetExtension(files[0]).ToLower();
+
+                    if (this.supportedExtensions.Contains(fileExtension))
+                    {
+                        Mouse.OverrideCursor = Cursors.Arrow; // Normal cursor
+                        e.Effects = DragDropEffects.Copy; // Allow copy operation
+                    }
+                    else
+                    {
+                        Mouse.OverrideCursor = Cursors.No; // "No" symbol cursor
+                        e.Effects = DragDropEffects.None; // Disallow drop
+                    }
+                }
+            }
+        }
+
+        private void Window_DragLeave(object sender, DragEventArgs e)
+        {
+            Mouse.OverrideCursor = null;
+            e.Effects = DragDropEffects.None;
+        }
+
+        #endregion
     }
 }

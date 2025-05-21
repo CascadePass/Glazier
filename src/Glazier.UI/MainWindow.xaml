@@ -8,26 +8,26 @@
         Height="450" Width="800"
         Title="{x:Static local:Resources.Glazier}"
         Icon="/Images/GlazierIcon.png"
+        AllowDrop="True" DragEnter="Window_DragEnter" DragLeave="Window_DragLeave" Drop="Window_Drop"
         Background="{StaticResource MainWindowBackgroundBrush}">
     <Window.DataContext>
         <local:GlazierViewModel />
     </Window.DataContext>
 
-    <!--<Border Style="{StaticResource OuterBorderStyle}">-->
-        <DockPanel LastChildFill="True">
-            <Border
+    <DockPanel LastChildFill="True">
+        <Border
                 x:Name="InputFormBorder"
                 DockPanel.Dock="Top"
                 Style="{StaticResource OuterBorderStyle}">
-                    <StackPanel>
-                        <TextBlock
+            <StackPanel>
+                <TextBlock
                             x:Name="InputFileLabel"
                             Text="{x:Static local:Resources.Label_SourceFile}"
                             Visibility="{Binding IsImageNeeded, Converter={StaticResource boolToVisibility}}"
                             Style="{StaticResource FormLabel}"
                             />
 
-                        <local:CommandTextBox
+                <local:CommandTextBox
                             x:Name="InputFile"
                             InsetText="{x:Static local:Resources.Label_SourceFile}"
                             InsetIcon="/Images/Icons/FolderOpenBlue.png"
@@ -38,68 +38,50 @@
                             Visibility="{Binding IsImageNeeded, Converter={StaticResource boolToVisibility}}"
                             />
 
-                        
-                    <TextBlock
+
+                <TextBlock
                         x:Name="AlgorithmLabel"
                         Text="{x:Static local:Resources.Algorithm}"
                         Visibility="{Binding IsImageNeeded, Converter={StaticResource boolToVisibility}}"
                         Style="{StaticResource FormLabel}"
                         />
 
-                    <ComboBox
+                <ComboBox
                         Margin="0,4,0,4"
                         ItemsSource="{Binding GlazeMethods}"
                         SelectedValue="{Binding GlazeMethod, Mode=TwoWay}"
                         SelectedValuePath="Method"
                         >
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="{Binding IconPath}" Width="20" Height="20" />
-                                        <TextBlock Text="{Binding Name}" Margin="5,0,0,0" />
-                                        <TextBlock Text="{Binding Description}" Margin="5,0,0,0" FontStyle="Italic" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding IconPath}" Width="20" Height="20" />
+                                <TextBlock Text="{Binding Name}" Margin="5,0,0,0" />
+                                <TextBlock Text="{Binding Description}" Margin="5,0,0,0" FontStyle="Italic" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
 
-                    <TextBlock
+                <TextBlock
                         x:Name="ColorLabel"
                         Text="{x:Static local:Resources.Label_ReplacementColor}"
                         Style="{StaticResource FormLabel}"
                         Visibility="{Binding IsColorNeeded, Converter={StaticResource boolToVisibility}}"
                         />
 
-                    <local:ColorPicker
+                <local:ColorPicker
                         x:Name="ColorPicker"
                         SelectedColor="{Binding ReplacementColor}"
                         SuggestedColors="{Binding ImageColors}"
                         Background="{Binding ReplacementColor, Converter={StaticResource colorToBrush}}"
                         Visibility="{Binding IsColorNeeded, Converter={StaticResource boolToVisibility}}"
                         />
+            </StackPanel>
+        </Border>
 
-                        <!--<TextBlock
-                            x:Name="DestinationFileLabel"
-                            Text="{x:Static local:Resources.Label_DestinationFile}"
-                            Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}"
-                            Style="{StaticResource FormLabel}"
-                            />
-
-                        <local:CommandTextBox
-                            x:Name="DestinationFile"
-                            InsetText="{x:Static local:Resources.Label_DestinationFile}"
-                            CommandIcon="/Images/Icons/Save.png"
-                            Command="{Binding SaveImageFileCommand}"
-                            Opacity=".7"
-                            UserText="{Binding SourceFilename}"
-                            Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}"
-                            />-->
-
-                    </StackPanel>
-            </Border>
-
-            <Slider
+        <Slider
                 x:Name="ColorTolerance"
                 DockPanel.Dock="Bottom"
                 Minimum="0"
@@ -108,15 +90,15 @@
                 Value="{Binding ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
                 ToolTip="{Binding ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
                 >
-            </Slider>
+        </Slider>
 
-            <Border x:Name="ImagePreviewSection" Style="{StaticResource ImagesBorderStyle}" Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="3" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
+        <Border x:Name="ImagePreviewSection" Style="{StaticResource ImagesBorderStyle}" Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="3" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
 
                 <Image
                     x:Name="DisplayImage"
@@ -136,8 +118,8 @@
                     HorizontalAlignment="Stretch"
                     ShowsPreview="True" />
 
-                    <Grid Grid.Column="2">
-                        <Image
+                <Grid Grid.Column="2">
+                    <Image
                             x:Name="PreviewImage"                    
                             Source="{Binding PreviewImage}"
                             Stretch="Uniform"
@@ -145,12 +127,11 @@
                             MouseDown="DisplayImage_MouseDown"
                             />
 
-                        <local:LivePreviewToolbar BackgroundRemovalMethod="{Binding GlazeMethod}" />
-                    </Grid>
-
+                    <local:LivePreviewToolbar BackgroundRemovalMethod="{Binding GlazeMethod}" />
                 </Grid>
-            </Border>
-        </DockPanel>
-    <!--</Border>-->
+
+            </Grid>
+        </Border>
+    </DockPanel>
 
 </local:ThemeListener>

@@ -296,7 +296,7 @@
                                     <Thumb.Template>
                                         <ControlTemplate TargetType="Thumb">
                                             <Grid>
-                                                <Image Source="/Images/GlazierIcon.png" />
+                                                <Image Source="/Images/Icons/CrystallBall.png" />
                                                 
                                                 <!-- Hover Effect -->
                                                 <Grid.Style>

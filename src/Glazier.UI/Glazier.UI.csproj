@@ -15,6 +15,7 @@
     <None Remove="Images\ColorPaintbrush.png" />
     <None Remove="Images\Icons\ColorDialog.png" />
     <None Remove="Images\Icons\ColorPalette.png" />
+    <None Remove="Images\Icons\CrystallBall.png" />
     <None Remove="Images\Icons\Infinity.png" />
     <None Remove="Images\Icons\InkCanvas.png" />
     <None Remove="Images\Icons\InkPresenter.png" />
@@ -50,6 +51,7 @@
     <Resource Include="Images\Background2-Dark.png" />
     <Resource Include="Images\Icons\ColorDialog.png" />
     <Resource Include="Images\Icons\ColorPalette.png" />
+    <Resource Include="Images\Icons\CrystallBall.png" />
     <Resource Include="Images\Icons\FolderOpenBlue.png" />
     <Resource Include="Images\Icons\FolderOpened.png" />
     <Resource Include="Images\Icons\Infinity.png" />

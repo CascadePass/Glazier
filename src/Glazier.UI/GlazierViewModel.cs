@@ -44,6 +44,8 @@ namespace CascadePass.Glazier.UI
         private ImageGlazier imageGlazier;
         private OnyxBackgroundRemover onyx;
 
+        private IFileDialogProvider dialogProvider;
+
         private object threadKey;
 
         private DelegateCommand browseForImageFile, saveImageData, viewLargePreviewCommand, viewMaskCommand;
@@ -61,6 +63,7 @@ namespace CascadePass.Glazier.UI
             this.colorSimilarity = 30;
 
             this.imageOutputSizes = [];
+            this.FileDialogProvider = new FileDialogProvider();
 
             this.threadKey = new();
 
@@ -201,6 +204,12 @@ namespace CascadePass.Glazier.UI
 
         public bool IsSourceFilenameValid => !string.IsNullOrEmpty(this.SourceFilename) && File.Exists(this.SourceFilename);
 
+        public IFileDialogProvider FileDialogProvider
+        {
+            get => this.dialogProvider;
+            set => this.SetPropertyValue(ref this.dialogProvider, value, nameof(this.FileDialogProvider));
+        }
+
         #region Visibility
 
         public bool IsImageLoaded => this.ImageData is not null;
@@ -298,6 +307,17 @@ namespace CascadePass.Glazier.UI
             bitmapImage.Freeze(); // Makes it usable across threads
 
             return bitmapImage;
+        }
+
+        public static Bitmap ConvertBitmapSourceToBitmap(BitmapSource bitmapSource)
+        {
+            using var memoryStream = new MemoryStream();
+            var encoder = new BmpBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+            encoder.Save(memoryStream);
+            memoryStream.Position = 0;
+
+            return new Bitmap(memoryStream);
         }
 
         private void GetMostCommonColors()
@@ -411,13 +431,48 @@ namespace CascadePass.Glazier.UI
 
         private void CancelPreviousProcessing()
         {
-            if (mlProcessingCancellationToken != null)
+            if (this.mlProcessingCancellationToken != null)
             {
-                mlProcessingCancellationToken.Cancel();
-                mlProcessingCancellationToken.Dispose();
+                this.mlProcessingCancellationToken.Cancel();
+                this.mlProcessingCancellationToken.Dispose();
             }
 
-            mlProcessingCancellationToken = new CancellationTokenSource();
+            this.mlProcessingCancellationToken = new CancellationTokenSource();
+        }
+
+        internal async void SaveIconFile(string filename)
+        {
+            IconFileExporter iconMaker = new();
+
+            if (this.GlazeMethod == GlazeMethod.ColorReplacement)
+            {
+                var processedImage = this.ImageGlazier.ConvertToBitmapSource();
+
+                if (processedImage != null)
+                {
+                    var resizedImage = this.ResizeBitmap(GlazierViewModel.ConvertBitmapSourceToBitmap(processedImage), this.outputSize.Size);
+
+                    iconMaker.SourceImage = GlazierViewModel.ConvertBitmapToBitmapImage(resizedImage);
+                }
+            }
+            else if (this.GlazeMethod == GlazeMethod.MachineLearning)
+            {
+                this.CancelPreviousProcessing();
+
+                var processedImage = await this.onyx.RemoveBackgroundAsync(
+                    this.ColorSimilarityThreshold,
+                    mlProcessingCancellationToken.Token
+                );
+
+                if (processedImage != null && !this.mlProcessingCancellationToken.Token.IsCancellationRequested)
+                {
+                    var resizedImage = this.ResizeBitmap(processedImage, this.outputSize.Size);
+
+                    iconMaker.SourceImage = GlazierViewModel.ConvertBitmapToBitmapImage(resizedImage);
+                }
+            }
+
+            iconMaker.Save(filename);
         }
 
         internal void SaveColorReplacementImage(string filename)
@@ -476,34 +531,25 @@ namespace CascadePass.Glazier.UI
 
         private void BrowseForImageFileImplementation()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                Title = "Select an Image File",
-                Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif|All Files|*.*",
-                Multiselect = false
-            };
+            var filename = this.FileDialogProvider.BrowseToOpenImageFile();
 
-            var result = openFileDialog.ShowDialog();
-
-            if (result.HasValue && result.Value)
+            if (!string.IsNullOrWhiteSpace(filename))
             {
-                this.SourceFilename = openFileDialog.FileName;
+                this.SourceFilename = filename;
             }
         }
 
         private void SaveImageImplementation()
         {
-            var dialog = new SaveFileDialog()
-            {
-                Title = "Save Image File",
-                Filter = "Image Files|*.png|All Files|*.*",
-                AddExtension = true,
-                DefaultExt = "*.png"
-            };
+            var filename = this.FileDialogProvider.BrowseToSaveImageFile();
 
-            if (dialog.ShowDialog() == true)
+            if (!string.IsNullOrWhiteSpace(filename))
             {
-                string filename = dialog.FileName;
+                if (filename.ToLower().EndsWith(".ico"))
+                {
+                    this.SaveIconFile(filename);
+                    return;
+                }
 
                 if (this.GlazeMethod == GlazeMethod.ColorReplacement)
                 {

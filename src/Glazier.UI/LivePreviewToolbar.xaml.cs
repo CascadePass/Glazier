@@ -45,6 +45,14 @@ namespace CascadePass.Glazier.UI
             DependencyProperty.Register("BackgroundRemovalMethod", typeof(GlazeMethod), typeof(LivePreviewToolbar),
                 new PropertyMetadata(GlazeMethod.MachineLearning, OnBackgroundRemovalMethodChanged));
 
+        public static readonly DependencyProperty AllowViewingMaskProperty =
+            DependencyProperty.Register("AllowViewingMask", typeof(bool), typeof(LivePreviewToolbar),
+                new PropertyMetadata(true, OnAllowViewingMaskChanged));
+
+        public static readonly DependencyProperty AllowPreviewProperty =
+            DependencyProperty.Register("AllowPreview", typeof(bool), typeof(LivePreviewToolbar),
+                new PropertyMetadata(true, OnAllowPreviewChanged));
+
         #endregion
 
         public LivePreviewToolbar()
@@ -88,6 +96,18 @@ namespace CascadePass.Glazier.UI
         {
             get => (GlazeMethod)GetValue(BackgroundRemovalMethodProperty);
             set => SetValue(BackgroundRemovalMethodProperty, value);
+        }
+
+        public ImageSource AllowViewingMask
+        {
+            get => (ImageSource)GetValue(AllowViewingMaskProperty);
+            set => SetValue(AllowViewingMaskProperty, value);
+        }
+
+        public bool AllowPreview
+        {
+            get => (bool)GetValue(AllowPreviewProperty);
+            set => SetValue(AllowPreviewProperty, value);
         }
 
         #endregion
@@ -140,6 +160,22 @@ namespace CascadePass.Glazier.UI
 
             toolbar.IsUsingColorReplacement = glazeMethod == GlazeMethod.ColorReplacement;
             toolbar.IsUsingOnyx = glazeMethod == GlazeMethod.MachineLearning;
+        }
+
+        private static void OnAllowViewingMaskChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is not ImageEditor control)
+            {
+                return;
+            }
+        }
+
+        private static void OnAllowPreviewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is not ImageEditor control)
+            {
+                return;
+            }
         }
 
         #endregion

@@ -168,7 +168,6 @@
 
     <Style TargetType="GridSplitter">
         <Setter Property="Width" Value="30" />
-        <Setter Property="Background" Value="Transparent" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="ShowsPreview" Value="True" />
@@ -176,7 +175,7 @@
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="Red" />
+                <Setter Property="Background" Value="{StaticResource SplitterBrush}" />
                 <Setter Property="Opacity" Value="1"/>
             </Trigger>
         </Style.Triggers>

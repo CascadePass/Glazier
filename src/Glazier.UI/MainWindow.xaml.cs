@@ -60,7 +60,7 @@ namespace CascadePass.Glazier.UI
             }
             else if (e.PropertyName == nameof(GlazierViewModel.PreviewImage))
             {
-                this.UpdateBinding(BindingOperations.GetBindingExpression(this.PreviewImage, Image.SourceProperty));
+                this.UpdateBinding(BindingOperations.GetBindingExpression(this.PreviewImage, ImageEditor.ImageProperty));
             }
             else if (e.PropertyName == nameof(GlazierViewModel.SourceFilename))
             {

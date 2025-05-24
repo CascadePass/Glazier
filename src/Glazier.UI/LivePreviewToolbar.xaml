@@ -17,7 +17,7 @@
                 <Image Source="/Images/Icons/Save.png" Width="20" Height="20" />
             </Button>
 
-            <Button Background="Transparent" BorderBrush="Transparent" Command="{Binding ViewLargePreviewCommand, Mode=OneTime}">
+            <Button Background="Transparent" BorderBrush="Transparent" Command="{Binding ViewLargePreviewCommand, Mode=OneTime}" Visibility="{Binding AllowPreview, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource boolToVisibility}}">
                 <Image Source="/Images/Icons/Search.png" Width="20" Height="20" />
             </Button>
 
@@ -32,7 +32,7 @@
             <ToggleButton
                 IsChecked="{Binding IsMaskVisible}"
                 Background="Transparent" BorderBrush="Transparent"
-                Visibility="{Binding IsUsingOnyx, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource boolToVisibility}}"
+                Visibility="{Binding AllowViewingMask, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource boolToVisibility}}"
                 Command="{Binding ViewMaskCommand, Mode=OneTime}">
                 <Image Source="/Images/Icons/Mask.png" Width="20" Height="20" />
             </ToggleButton>

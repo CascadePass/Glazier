@@ -12,6 +12,11 @@
     <SolidColorBrush x:Key="ToolbarBorderBrush" Color="DarkGray"/>
 
 
+    <LinearGradientBrush x:Key="SplitterBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="OrangeRed" Offset="0"/>
+        <GradientStop Color="Red" Offset="1"/>
+    </LinearGradientBrush>
+
     <LinearGradientBrush x:Key="OuterBorderBrush" StartPoint="0,0" EndPoint="1,1">
         <GradientStop Color="DarkRed" Offset="0"/>
         <GradientStop Color="Black" Offset=".5"/>

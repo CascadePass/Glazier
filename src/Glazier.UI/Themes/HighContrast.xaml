@@ -12,6 +12,8 @@
     <SolidColorBrush x:Key="ToolbarBorderBrush" Color="DarkGray"/>
 
 
+    <SolidColorBrush x:Key="SplitterBrush" Color="{DynamicResource SystemColors.ControlDark}" />
+
     <SolidColorBrush x:Key="OuterBorderBrush" Color="{DynamicResource SystemColors.ControlDark}"/>
     <SolidColorBrush x:Key="FormGroupBorderBrush" Color="{DynamicResource SystemColors.ActiveBorder}"/>
     <SolidColorBrush x:Key="ContrastyBackgroundBrush" Color="{DynamicResource SystemColors.HighlightColor}"/>

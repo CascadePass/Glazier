@@ -13,6 +13,11 @@
 
 
 
+    <LinearGradientBrush x:Key="SplitterBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="Orange" Offset="0"/>
+        <GradientStop Color="Red" Offset="1"/>
+    </LinearGradientBrush>
+
     <LinearGradientBrush x:Key="OuterBorderBrush" StartPoint="0,0" EndPoint="1,1">
         <GradientStop Color="OrangeRed" Offset="0"/>
         <GradientStop Color="Gold" Offset="1"/>

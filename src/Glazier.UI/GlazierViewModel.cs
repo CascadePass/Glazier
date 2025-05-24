@@ -578,7 +578,7 @@ namespace CascadePass.Glazier.UI
                 this.onyx.Mask.Save(memoryStream, ImageFormat.Png);
                 memoryStream.Position = 0;
 
-                BitmapImage bitmapImage = new BitmapImage();
+                BitmapImage bitmapImage = new();
                 bitmapImage.BeginInit();
                 bitmapImage.StreamSource = memoryStream;
                 bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
@@ -598,18 +598,20 @@ namespace CascadePass.Glazier.UI
         {
             var backgroundBrush = Application.Current?.Resources?["CrosshatchBrush"] as Brush;
 
-            Image image = new()
+            ImageEditor imageEditor = new()
             {
-                Source = this.PreviewImage,
-                Stretch = Stretch.Uniform,
+                Image = this.PreviewImage,
+                Background = backgroundBrush,
+                AllowPreview = false,
             };
 
             Window previewWindow = new()
             {
                 Title = "Preview Image",
-                Content = image,
+                Content = imageEditor,
                 WindowState = WindowState.Maximized,
                 Background = backgroundBrush,
+                DataContext = this,
             };
 
             previewWindow.ShowDialog();

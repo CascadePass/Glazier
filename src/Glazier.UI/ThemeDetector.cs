@@ -1,32 +1,40 @@
 ﻿using Microsoft.Win32;
-using System.Runtime.InteropServices;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Interop;
 
 namespace CascadePass.Glazier.UI
 {
-    public interface IThemeDetector
-    {
-        bool IsHighContrastEnabled { get; }
-        bool IsInLightMode { get; }
-
-        GlazierTheme GetTheme();
-
-        string GetThemeName();
-    }
-
     public class ThemeDetector : IThemeDetector
     {
+        private readonly IRegistryProvider registryProvider;
+
+        #region Constructors
+
+        public ThemeDetector()
+        {
+            this.registryProvider = new RegistryProvider();
+        }
+
+        public ThemeDetector(IRegistryProvider registryProviderToUse)
+        {
+            this.registryProvider = registryProviderToUse;
+        }
+
+        #endregion
+
+        public IRegistryProvider RegistryProvider => this.registryProvider;
+
         public bool IsInLightMode
         {
             get
             {
-                using RegistryKey key = Registry.CurrentUser.OpenSubKey(
-                    @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
-                );
-
-                return key?.GetValue("AppsUseLightTheme")?.Equals(1) ?? true;
+                return
+                    this.RegistryProvider.GetValue(
+                        @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize",
+                        "AppsUseLightTheme"
+                        )
+                    ?.Equals(1) ?? true;
             }
         }
 
@@ -69,37 +77,27 @@ namespace CascadePass.Glazier.UI
         }
     }
 
-    public class ThemeListener : Window
+    public class ThemeListener : IThemeListener
     {
+        public event EventHandler ThemeChanged;
+
         public ThemeListener()
         {
             this.ThemeDetector = new ThemeDetector();
+            SystemEvents.UserPreferenceChanged += this.OnUserPreferenceChanged;
+
+            this.ApplyTheme();
         }
 
         protected IThemeDetector ThemeDetector { get; set; }
 
-        protected override void OnSourceInitialized(EventArgs e)
+        internal void ApplyTheme()
         {
-            base.OnSourceInitialized(e);
-            HwndSource source = HwndSource.FromHwnd(new WindowInteropHelper(this).Handle);
-            source.AddHook(WndProc);
-        }
-
-        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            if (msg == 0x001A) // WM_SETTINGCHANGE
+            if (Application.Current is null)
             {
-                if (Marshal.PtrToStringUni(lParam) == "WindowsThemeElement")
-                {
-                    // Theme changed, trigger an update!
-                    this.ApplyTheme();
-                }
+                return;
             }
-            return IntPtr.Zero;
-        }
 
-        protected void ApplyTheme()
-        {
             Application.Current.Resources.MergedDictionaries.Clear();
 
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary
@@ -112,6 +110,19 @@ namespace CascadePass.Glazier.UI
             {
                 Source = new Uri($"Themes/Universal.xaml", UriKind.Relative)
             });
+        }
+
+        private void OnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+        {
+            if (e.Category == UserPreferenceCategory.General)
+            {
+                this.OnThemeChanged(sender, e);
+            }
+        }
+
+        protected void OnThemeChanged(object sender, EventArgs e)
+        {
+            Task.Delay(100).ContinueWith(_ => this.ApplyTheme());
         }
     }
 }

@@ -55,14 +55,16 @@ namespace CascadePass.Glazier.UI
 
         #endregion
 
+        #region Constructor
+
         public GlazierViewModel()
         {
             this.ReplacementColor = Colors.White;
             this.ImageGlazier = new();
-            this.commonImageColors = [];
+            this.ImageColors = [];
             this.colorSimilarity = 30;
 
-            this.imageOutputSizes = [];
+            this.Sizes = [];
             this.FileDialogProvider = new FileDialogProvider();
 
             this.threadKey = new();
@@ -86,6 +88,8 @@ namespace CascadePass.Glazier.UI
             //TODO: Read model location from config file?
             this.LoadOnyxModel();
         }
+
+        #endregion
 
         #region Properties
 
@@ -423,7 +427,7 @@ namespace CascadePass.Glazier.UI
 
         private void ApplyDebouncedThreshold(object sender, EventArgs e)
         {
-            debounceTimer.Stop();
+            this.debounceTimer.Stop();
             this.CancelPreviousProcessing();
 
             this.GeneratePreviewImage();
@@ -529,7 +533,7 @@ namespace CascadePass.Glazier.UI
 
         #region Command Implementations
 
-        private void BrowseForImageFileImplementation()
+        internal void BrowseForImageFileImplementation()
         {
             var filename = this.FileDialogProvider.BrowseToOpenImageFile();
 
@@ -539,7 +543,7 @@ namespace CascadePass.Glazier.UI
             }
         }
 
-        private void SaveImageImplementation()
+        internal void SaveImageImplementation()
         {
             var filename = this.FileDialogProvider.BrowseToSaveImageFile();
 
@@ -570,7 +574,7 @@ namespace CascadePass.Glazier.UI
             }
         }
 
-        private void ViewMaskImplementation()
+        internal void ViewMaskImplementation()
         {
             if (this.IsMaskVisible)
             {
@@ -594,7 +598,7 @@ namespace CascadePass.Glazier.UI
             }
         }
 
-        private void ViewLargePreviewImplementation()
+        internal void ViewLargePreviewImplementation()
         {
             var backgroundBrush = Application.Current?.Resources?["CrosshatchBrush"] as Brush;
 

@@ -16,13 +16,14 @@ namespace CascadePass.Glazier.UI
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : ThemeListener
+    public partial class MainWindow : Window
     {
         private string[] supportedExtensions;
+        private IThemeListener themeListener;
 
         public MainWindow()
         {
-            base.ApplyTheme();
+            this.themeListener = new ThemeListener();
             this.InitializeComponent();
 
             this.supportedExtensions = [".png", ".jpg", ".bmp", ".tiff", ".tif"];

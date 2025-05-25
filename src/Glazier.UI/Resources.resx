@@ -120,6 +120,12 @@
   <data name="Algorithm" xml:space="preserve">
     <value>Algorithm</value>
   </data>
+  <data name="AlgorithmDescription_Onyx" xml:space="preserve">
+    <value>Slower, better for complex backgrounds</value>
+  </data>
+  <data name="AlgorithmDescription_Prism" xml:space="preserve">
+    <value>Fast, good for simple backgrounds</value>
+  </data>
   <data name="B" xml:space="preserve">
     <value>B</value>
   </data>
@@ -158,6 +164,12 @@
   </data>
   <data name="Label_SourceFile" xml:space="preserve">
     <value>Source image file</value>
+  </data>
+  <data name="Onyx" xml:space="preserve">
+    <value>Onyx</value>
+  </data>
+  <data name="Prism" xml:space="preserve">
+    <value>Prism</value>
   </data>
   <data name="R" xml:space="preserve">
     <value>R</value>

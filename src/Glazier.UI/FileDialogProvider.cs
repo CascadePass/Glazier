@@ -2,11 +2,6 @@
 
 namespace CascadePass.Glazier.UI
 {
-    public interface IFileDialogProvider
-    {
-        string BrowseToOpenImageFile();
-        string BrowseToSaveImageFile();
-    }
 
     public class FileDialogProvider : IFileDialogProvider
     {

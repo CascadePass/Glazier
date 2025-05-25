@@ -1,9 +1,5 @@
-﻿ using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CascadePass.Glazier.UI
 {
@@ -17,6 +13,15 @@ namespace CascadePass.Glazier.UI
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Sets the value of a property, and raises the <see cref="PropertyChanged"/>
+        /// event if the value has been updated.
+        /// </summary>
+        /// <typeparam name="T">The type of the property.</typeparam>
+        /// <param name="field">The backing field whose value to test and possibly change.</param>
+        /// <param name="value">The new value of the property.</param>
+        /// <param name="propertyName">The name of the property, to raise the <see cref="PropertyChanged"/> event.</param>
+        /// <returns>True if the value has changed, false if it was already the new value.</returns>
         protected bool SetPropertyValue<T>(ref T field, T value, string propertyName)
         {
             if (EqualityComparer<T>.Default.Equals(field, value))
@@ -29,6 +34,15 @@ namespace CascadePass.Glazier.UI
             return true;
         }
 
+        /// <summary>
+        /// Sets the value of a property, and raises the <see cref="PropertyChanged"/>
+        /// event if the value has been updated.
+        /// </summary>
+        /// <typeparam name="T">The type of the property.</typeparam>
+        /// <param name="field">The backing field whose value to test and possibly change.</param>
+        /// <param name="value">The new value of the property.</param>
+        /// <param name="propertyName">The name of the properties, to raise the <see cref="PropertyChanged"/> event for.</param>
+        /// <returns>True if the value has changed, false if it was already the new value.</returns>
         protected bool SetPropertyValue<T>(ref T field, T value, string[] propertyNames)
         {
             if (!EqualityComparer<T>.Default.Equals(field, value))
@@ -55,9 +69,5 @@ namespace CascadePass.Glazier.UI
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    }
-
-    public abstract class ViewModel : Observable
-    {
     }
 }

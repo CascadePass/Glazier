@@ -4,13 +4,51 @@ namespace CascadePass.Glazier.UI
 {
     public class GlazeMethodViewModel : ViewModel
     {
+        #region Fields
+
+        private string name;
+        private string description;
+        private string iconPath;
+        private GlazeMethod method;
+        private string methodDescription;
+
+        #endregion
+
         public GlazeMethodViewModel() { }
 
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string IconPath { get; set; }
-        public GlazeMethod Method { get; set; }
-        public string MethodDescription { get; set; }
+        #region Properties
+
+        public string Name
+        {
+            get => this.name;
+            set => this.SetPropertyValue(ref this.name, value, nameof(this.Name));
+        }
+
+        public string Description
+        {
+            get => this.description;
+            set => this.SetPropertyValue(ref this.description, value, nameof(this.Description));
+        }
+
+        public string IconPath
+        {
+            get => this.iconPath;
+            set => this.SetPropertyValue(ref this.iconPath, value, nameof(this.IconPath));
+        }
+
+        public GlazeMethod Method
+        {
+            get => this.method;
+            set => this.SetPropertyValue(ref this.method, value, nameof(this.Method));
+        }
+
+        public string MethodDescription
+        {
+            get => this.methodDescription;
+            set => this.SetPropertyValue(ref this.methodDescription, value, nameof(this.MethodDescription));
+        }
+
+        #endregion
 
         public static IEnumerable<GlazeMethodViewModel> GetMethods()
         {
@@ -18,19 +56,18 @@ namespace CascadePass.Glazier.UI
             [
                 new GlazeMethodViewModel
                 {
-                    Name = "Color and similarity",
-                    Description = "Fast, good for simple backgrounds",
+                    Name = Resources.Prism,
+                    Description = Resources.AlgorithmDescription_Prism,
                     IconPath = "/Images/Icons/ColorPalette.png",
                     Method = GlazeMethod.ColorReplacement,
-                    MethodDescription = "Replaces a color and similar hues, with transparent"
                 },
+
                 new GlazeMethodViewModel
                 {
-                    Name = "Onyx (Machine Learning)",
-                    Description = "Slower, better for complex backgrounds",
+                    Name = Resources.Onyx,
+                    Description = Resources.AlgorithmDescription_Onyx,
                     IconPath = "/Images/Icons/ColorDialog.png",
                     Method = GlazeMethod.MachineLearning,
-                    MethodDescription = "Uses a machine learning data set to identify the subject and remove everything else"
                 }
             ];
         }

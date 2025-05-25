@@ -22,21 +22,21 @@ namespace CascadePass.Glazier.UI {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public Resources() {
+        internal Resources() {
         }
         
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CascadePass.Glazier.UI.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace CascadePass.Glazier.UI {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,16 +63,34 @@ namespace CascadePass.Glazier.UI {
         /// <summary>
         ///   Looks up a localized string similar to Algorithm.
         /// </summary>
-        public static string Algorithm {
+        internal static string Algorithm {
             get {
                 return ResourceManager.GetString("Algorithm", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Slower, better for complex backgrounds.
+        /// </summary>
+        internal static string AlgorithmDescription_Onyx {
+            get {
+                return ResourceManager.GetString("AlgorithmDescription_Onyx", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fast, good for simple backgrounds.
+        /// </summary>
+        internal static string AlgorithmDescription_Prism {
+            get {
+                return ResourceManager.GetString("AlgorithmDescription_Prism", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to B.
         /// </summary>
-        public static string B {
+        internal static string B {
             get {
                 return ResourceManager.GetString("B", resourceCulture);
             }
@@ -81,7 +99,7 @@ namespace CascadePass.Glazier.UI {
         /// <summary>
         ///   Looks up a localized string similar to Blue.
         /// </summary>
-        public static string Blue {
+        internal static string Blue {
             get {
                 return ResourceManager.GetString("Blue", resourceCulture);
             }
@@ -90,7 +108,7 @@ namespace CascadePass.Glazier.UI {
         /// <summary>
         ///   Looks up a localized string similar to G.
         /// </summary>
-        public static string G {
+        internal static string G {
             get {
                 return ResourceManager.GetString("G", resourceCulture);
             }
@@ -99,7 +117,7 @@ namespace CascadePass.Glazier.UI {
         /// <summary>
         ///   Looks up a localized string similar to Glazier.
         /// </summary>
-        public static string Glazier {
+        internal static string Glazier {
             get {
                 return ResourceManager.GetString("Glazier", resourceCulture);
             }
@@ -108,7 +126,7 @@ namespace CascadePass.Glazier.UI {
         /// <summary>
         ///   Looks up a localized string similar to Green.
         /// </summary>
-        public static string Green {
+        internal static string Green {
             get {
                 return ResourceManager.GetString("Green", resourceCulture);
             }
@@ -117,7 +135,7 @@ namespace CascadePass.Glazier.UI {
         /// <summary>
         ///   Looks up a localized string similar to Hex.
         /// </summary>
-        public static string Hex {
+        internal static string Hex {
             get {
                 return ResourceManager.GetString("Hex", resourceCulture);
             }
@@ -126,7 +144,7 @@ namespace CascadePass.Glazier.UI {
         /// <summary>
         ///   Looks up a localized string similar to Colors.
         /// </summary>
-        public static string Label_Colors {
+        internal static string Label_Colors {
             get {
                 return ResourceManager.GetString("Label_Colors", resourceCulture);
             }
@@ -135,7 +153,7 @@ namespace CascadePass.Glazier.UI {
         /// <summary>
         ///   Looks up a localized string similar to Destination (save to) image file.
         /// </summary>
-        public static string Label_DestinationFile {
+        internal static string Label_DestinationFile {
             get {
                 return ResourceManager.GetString("Label_DestinationFile", resourceCulture);
             }
@@ -144,7 +162,7 @@ namespace CascadePass.Glazier.UI {
         /// <summary>
         ///   Looks up a localized string similar to Files.
         /// </summary>
-        public static string Label_Files {
+        internal static string Label_Files {
             get {
                 return ResourceManager.GetString("Label_Files", resourceCulture);
             }
@@ -153,7 +171,7 @@ namespace CascadePass.Glazier.UI {
         /// <summary>
         ///   Looks up a localized string similar to Size:.
         /// </summary>
-        public static string Label_OutputSize {
+        internal static string Label_OutputSize {
             get {
                 return ResourceManager.GetString("Label_OutputSize", resourceCulture);
             }
@@ -162,7 +180,7 @@ namespace CascadePass.Glazier.UI {
         /// <summary>
         ///   Looks up a localized string similar to Replace Color.
         /// </summary>
-        public static string Label_ReplacementColor {
+        internal static string Label_ReplacementColor {
             get {
                 return ResourceManager.GetString("Label_ReplacementColor", resourceCulture);
             }
@@ -171,7 +189,7 @@ namespace CascadePass.Glazier.UI {
         /// <summary>
         ///   Looks up a localized string similar to Similarity Threshold.
         /// </summary>
-        public static string Label_Similarity {
+        internal static string Label_Similarity {
             get {
                 return ResourceManager.GetString("Label_Similarity", resourceCulture);
             }
@@ -180,16 +198,34 @@ namespace CascadePass.Glazier.UI {
         /// <summary>
         ///   Looks up a localized string similar to Source image file.
         /// </summary>
-        public static string Label_SourceFile {
+        internal static string Label_SourceFile {
             get {
                 return ResourceManager.GetString("Label_SourceFile", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Onyx.
+        /// </summary>
+        internal static string Onyx {
+            get {
+                return ResourceManager.GetString("Onyx", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prism.
+        /// </summary>
+        internal static string Prism {
+            get {
+                return ResourceManager.GetString("Prism", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to R.
         /// </summary>
-        public static string R {
+        internal static string R {
             get {
                 return ResourceManager.GetString("R", resourceCulture);
             }
@@ -198,7 +234,7 @@ namespace CascadePass.Glazier.UI {
         /// <summary>
         ///   Looks up a localized string similar to Red.
         /// </summary>
-        public static string Red {
+        internal static string Red {
             get {
                 return ResourceManager.GetString("Red", resourceCulture);
             }
@@ -207,7 +243,7 @@ namespace CascadePass.Glazier.UI {
         /// <summary>
         ///   Looks up a localized string similar to x.
         /// </summary>
-        public static string x {
+        internal static string x {
             get {
                 return ResourceManager.GetString("x", resourceCulture);
             }

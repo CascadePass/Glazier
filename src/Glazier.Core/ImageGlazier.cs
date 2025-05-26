@@ -25,7 +25,7 @@ namespace CascadePass.Glazier.Core
 
             try
             {
-                ImageData = Image.Load<Rgba32>(filePath);
+                this.ImageData = Image.Load<Rgba32>(filePath);
             }
             catch (Exception)
             {
@@ -50,6 +50,11 @@ namespace CascadePass.Glazier.Core
 
         public async Task LoadImageAsync(string filePath)
         {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException($"The file {filePath} does not exist.", filePath);
+            }
+
             try
             {
                 using var stream = File.OpenRead(filePath);
@@ -136,23 +141,7 @@ namespace CascadePass.Glazier.Core
             });
         }
 
-        public BitmapSource ConvertToBitmapSource() => ImageGlazier.ConvertToBitmapSource(this.ImageData);
-
-        public static BitmapSource ConvertToBitmapSource(Image<Rgba32> image)
-        {
-            using MemoryStream memoryStream = new();
-            image.SaveAsPng(memoryStream);
-            memoryStream.Seek(0, SeekOrigin.Begin);
-
-            BitmapImage bitmap = new();
-            bitmap.BeginInit();
-            bitmap.StreamSource = memoryStream;
-            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-            bitmap.EndInit();
-            bitmap.Freeze(); // Makes it UI-thread safe
-
-            return bitmap;
-        }
+        public BitmapImage ConvertToBitmapSource() => ImageFormatBridge.ToBitmapImage(this.ImageData);
 
         public static BitmapSource GenerateColorRangeImageSource(Rgba32 targetColor, int tolerance, int imageWidth = 400, int imageHeight = 100)
         {
@@ -169,7 +158,7 @@ namespace CascadePass.Glazier.Core
                 image.Mutate(ctx => ctx.Fill(variationColor, new Rectangle(i * steps, 0, steps, imageHeight)));
             }
 
-            return ConvertToBitmapSource(image);
+            return ImageFormatBridge.ToBitmapImage(image);
         }
 
         public Image<Rgba32> Clone()
@@ -184,8 +173,11 @@ namespace CascadePass.Glazier.Core
 
         public void Dispose()
         {
-            this.ImageData?.Dispose();
-            this.ImageData = null;
+            if (this.ImageData is not null)
+            {
+                this.ImageData.Dispose();
+                this.ImageData = null;
+            }
         }
     }
 }

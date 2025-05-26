@@ -38,7 +38,8 @@ namespace CascadePass.Glazier.UI
         {
             if (image.Source is BitmapSource bitmapSource)
             {
-                int stride = bitmapSource.PixelWidth * 4; // 4 bytes per pixel (BGRA format)
+                // There are 4 bytes per pixel (BGRA format)
+                int stride = bitmapSource.PixelWidth * 4;
                 byte[] pixels = new byte[stride * bitmapSource.PixelHeight];
 
                 bitmapSource.CopyPixels(pixels, stride, 0);
@@ -50,7 +51,7 @@ namespace CascadePass.Glazier.UI
                 }
             }
 
-            return Colors.Transparent; // If something goes wrong, return transparent
+            return Colors.Transparent;
         }
 
         private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

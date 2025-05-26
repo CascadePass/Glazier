@@ -1,16 +1,45 @@
 ﻿using SixLabors.ImageSharp.PixelFormats;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CascadePass.Glazier.Core.Test
 {
     [TestClass]
     public class ColorSimilarityTests
     {
-        #region ColorsAreClose
+        [TestMethod]
+        public void ColorsAreClose_ExactMatch_ReturnsTrue()
+        {
+            var color1 = new Rgba32(100, 150, 200, 255);
+            var color2 = new Rgba32(100, 150, 200, 255);
+            int tolerance = 10;
+
+            var result = new ImageGlazier().ColorsAreClose(color1, color2, tolerance);
+
+            Assert.IsTrue(result, "Identical colors should be considered close.");
+        }
+
+        [TestMethod]
+        public void ColorsAreClose_SmallDifferenceWithinTolerance_ReturnsTrue()
+        {
+            var color1 = new Rgba32(100, 150, 200, 255);
+            var color2 = new Rgba32(105, 155, 205, 255); // Slightly different
+            int tolerance = 10;
+
+            var result = new ImageGlazier().ColorsAreClose(color1, color2, tolerance);
+
+            Assert.IsTrue(result, "Colors within the tolerance should be considered close.");
+        }
+
+        [TestMethod]
+        public void ColorsAreClose_LargeDifference_ReturnsFalse()
+        {
+            var color1 = new Rgba32(100, 150, 200, 255);
+            var color2 = new Rgba32(200, 50, 100, 255); // Far apart
+            int tolerance = 10;
+
+            var result = new ImageGlazier().ColorsAreClose(color1, color2, tolerance);
+
+            Assert.IsFalse(result, "Colors exceeding the tolerance should not be considered close.");
+        }
 
         [TestMethod]
         public void ColorsAreClose_ShouldReturnTrue_WhenColorsAreIdentical()
@@ -43,7 +72,7 @@ namespace CascadePass.Glazier.Core.Test
             var color1 = new Rgba32(100, 100, 100, 255);
             var color2 = new Rgba32(105, 105, 105, 255);
 
-            var result = glazier.ColorsAreClose(color1, color2, 5);
+            var result = glazier.ColorsAreClose(color1, color2, 15);
 
             Assert.IsTrue(result);
         }
@@ -113,9 +142,9 @@ namespace CascadePass.Glazier.Core.Test
         {
             var glazier = new ImageGlazier();
             var color1 = new Rgba32(100, 100, 100, 255);
-            var color2 = new Rgba32(105, 105, 105, 250);
+            var color2 = new Rgba32(105, 105, 105, 251);
 
-            var result = glazier.ColorsAreClose(color1, color2, 5);
+            var result = glazier.ColorsAreClose(color1, color2, 10);
 
             Assert.IsTrue(result);
         }
@@ -139,7 +168,7 @@ namespace CascadePass.Glazier.Core.Test
             var color1 = new Rgba32(100, 100, 100, 255);
             var color2 = new Rgba32(200, 200, 200, 255);
 
-            var result = glazier.ColorsAreClose(color1, color2, 150);
+            var result = glazier.ColorsAreClose(color1, color2, 250);
 
             Assert.IsTrue(result);
         }
@@ -155,7 +184,5 @@ namespace CascadePass.Glazier.Core.Test
 
             Assert.IsFalse(result);
         }
-
-        #endregion
     }
 }

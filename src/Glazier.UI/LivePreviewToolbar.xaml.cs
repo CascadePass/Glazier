@@ -43,11 +43,7 @@ namespace CascadePass.Glazier.UI
 
         public static readonly DependencyProperty BackgroundRemovalMethodProperty =
             DependencyProperty.Register("BackgroundRemovalMethod", typeof(GlazeMethod), typeof(LivePreviewToolbar),
-                new PropertyMetadata(GlazeMethod.MachineLearning, OnBackgroundRemovalMethodChanged));
-
-        public static readonly DependencyProperty AllowViewingMaskProperty =
-            DependencyProperty.Register("AllowViewingMask", typeof(bool), typeof(LivePreviewToolbar),
-                new PropertyMetadata(true, OnAllowViewingMaskChanged));
+                new PropertyMetadata(GlazeMethod.Onyx_MachineLearning, OnBackgroundRemovalMethodChanged));
 
         public static readonly DependencyProperty AllowPreviewProperty =
             DependencyProperty.Register("AllowPreview", typeof(bool), typeof(LivePreviewToolbar),
@@ -98,12 +94,6 @@ namespace CascadePass.Glazier.UI
             set => SetValue(BackgroundRemovalMethodProperty, value);
         }
 
-        public ImageSource AllowViewingMask
-        {
-            get => (ImageSource)GetValue(AllowViewingMaskProperty);
-            set => SetValue(AllowViewingMaskProperty, value);
-        }
-
         public bool AllowPreview
         {
             get => (bool)GetValue(AllowPreviewProperty);
@@ -141,7 +131,7 @@ namespace CascadePass.Glazier.UI
             bool isColorReplacement = (bool)e.NewValue;
 
             toolbar.IsUsingOnyx = !isColorReplacement;
-            toolbar.GlazierViewModel.GlazeMethod = isColorReplacement ? GlazeMethod.ColorReplacement: GlazeMethod.MachineLearning;
+            toolbar.GlazierViewModel.GlazeMethod = isColorReplacement ? GlazeMethod.Prism_ColorReplacement: GlazeMethod.Onyx_MachineLearning;
         }
 
         private static void OnIsUsingOnyxChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -150,7 +140,7 @@ namespace CascadePass.Glazier.UI
             bool isOnyx = (bool)e.NewValue;
 
             toolbar.IsUsingColorReplacement = !isOnyx;
-            toolbar.GlazierViewModel.GlazeMethod = isOnyx ? GlazeMethod.MachineLearning : GlazeMethod.ColorReplacement;
+            toolbar.GlazierViewModel.GlazeMethod = isOnyx ? GlazeMethod.Onyx_MachineLearning : GlazeMethod.Prism_ColorReplacement;
         }
 
         private static void OnBackgroundRemovalMethodChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -158,16 +148,8 @@ namespace CascadePass.Glazier.UI
             LivePreviewToolbar toolbar = (LivePreviewToolbar)d;
             var glazeMethod = (GlazeMethod)e.NewValue;
 
-            toolbar.IsUsingColorReplacement = glazeMethod == GlazeMethod.ColorReplacement;
-            toolbar.IsUsingOnyx = glazeMethod == GlazeMethod.MachineLearning;
-        }
-
-        private static void OnAllowViewingMaskChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is not ImageEditor control)
-            {
-                return;
-            }
+            toolbar.IsUsingColorReplacement = glazeMethod == GlazeMethod.Prism_ColorReplacement;
+            toolbar.IsUsingOnyx = glazeMethod == GlazeMethod.Onyx_MachineLearning;
         }
 
         private static void OnAllowPreviewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

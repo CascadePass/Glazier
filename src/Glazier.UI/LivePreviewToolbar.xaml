@@ -32,7 +32,6 @@
             <ToggleButton
                 IsChecked="{Binding IsMaskVisible}"
                 Background="Transparent" BorderBrush="Transparent"
-                Visibility="{Binding AllowViewingMask, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource boolToVisibility}}"
                 Command="{Binding ViewMaskCommand, Mode=OneTime}">
                 <Image Source="/Images/Icons/Mask.png" Width="20" Height="20" />
             </ToggleButton>

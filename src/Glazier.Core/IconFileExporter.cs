@@ -18,6 +18,8 @@ namespace CascadePass.Glazier.Core
 
         public List<int> IconSizes { get; set; }
 
+        public bool CompatibilityMode { get; set; }
+
         public BitmapImage SourceImage {
             get => this.source;
             set
@@ -49,7 +51,7 @@ namespace CascadePass.Glazier.Core
             foreach (var size in this.IconSizes)
             {
                 var resizedBitmap = this.DownsampleImage(size, size);
-                var pngData = ConvertToPng(resizedBitmap);
+                var iconData = this.CompatibilityMode ? this.ConvertToBmp(resizedBitmap) : this.ConvertToPng(resizedBitmap);
 
                 // Write icon directory entry
                 writer.Write((byte)size); // Width
@@ -58,23 +60,23 @@ namespace CascadePass.Glazier.Core
                 writer.Write((byte)0); // Reserved
                 writer.Write((short)1); // Color planes
                 writer.Write((short)32); // Bits per pixel
-                writer.Write(pngData.Length); // Image data size
+                writer.Write(iconData.Length); // Image data size
                 imageDataOffsets.Add(writer.BaseStream.Position);
                 writer.Write(0); // Placeholder for image data offset
             }
 
-            // Write PNG image data and update offsets
+            // Write image data and update offsets
             for (int i = 0; i < this.IconSizes.Count(); i++)
             {
                 var resizedBitmap = this.DownsampleImage(this.IconSizes.ElementAt(i), this.IconSizes.ElementAt(i));
-                var pngData = ConvertToPng(resizedBitmap);
+                var iconData = this.CompatibilityMode ? this.ConvertToBmp(resizedBitmap) : this.ConvertToPng(resizedBitmap);
 
                 long currentPosition = writer.BaseStream.Position;
                 writer.Seek((int)imageDataOffsets[i], SeekOrigin.Begin);
                 writer.Write((int)currentPosition);
                 writer.Seek(0, SeekOrigin.End);
 
-                writer.Write(pngData);
+                writer.Write(iconData);
             }
         }
 
@@ -91,7 +93,9 @@ namespace CascadePass.Glazier.Core
             }
 
             var transform = new ScaleTransform(width / (double)this.SourceImage.PixelWidth, height / (double)this.SourceImage.PixelHeight);
-            return new TransformedBitmap(this.SourceImage, transform);
+            var resized = new TransformedBitmap(this.SourceImage, transform);
+            RenderOptions.SetBitmapScalingMode(resized, BitmapScalingMode.HighQuality);
+            return resized;
         }
 
         internal void InferSizes()
@@ -107,7 +111,16 @@ namespace CascadePass.Glazier.Core
         internal byte[] ConvertToPng(BitmapSource bitmap)
         {
             using var stream = new MemoryStream();
-            var encoder = new PngBitmapEncoder();
+            var encoder = new PngBitmapEncoder { Interlace = PngInterlaceOption.On };
+            encoder.Frames.Add(BitmapFrame.Create(bitmap));
+            encoder.Save(stream);
+            return stream.ToArray();
+        }
+
+        internal byte[] ConvertToBmp(BitmapSource bitmap)
+        {
+            using var stream = new MemoryStream();
+            var encoder = new BmpBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(bitmap));
             encoder.Save(stream);
             return stream.ToArray();

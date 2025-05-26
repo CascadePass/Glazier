@@ -15,8 +15,8 @@ namespace CascadePass.Glazier.UI.Tests
         public void Convert_ShouldReturnTrue_WhenMethodsMatch()
         {
             var converter = new GlazeMethodConverter();
-            var selectedMethod = GlazeMethod.ColorReplacement;
-            var radioMethod = GlazeMethod.ColorReplacement;
+            var selectedMethod = GlazeMethod.Prism_ColorReplacement;
+            var radioMethod = GlazeMethod.Prism_ColorReplacement;
 
             var result = converter.Convert(selectedMethod, typeof(bool), radioMethod, CultureInfo.InvariantCulture);
 
@@ -27,8 +27,8 @@ namespace CascadePass.Glazier.UI.Tests
         public void Convert_ShouldReturnFalse_WhenMethodsDoNotMatch()
         {
             var converter = new GlazeMethodConverter();
-            var selectedMethod = GlazeMethod.MachineLearning;
-            var radioMethod = GlazeMethod.ColorReplacement;
+            var selectedMethod = GlazeMethod.Onyx_MachineLearning;
+            var radioMethod = GlazeMethod.Prism_ColorReplacement;
 
             var result = converter.Convert(selectedMethod, typeof(bool), radioMethod, CultureInfo.InvariantCulture);
 
@@ -39,7 +39,7 @@ namespace CascadePass.Glazier.UI.Tests
         public void ConvertBack_ShouldReturnMethod_WhenCheckedTrue()
         {
             var converter = new GlazeMethodConverter();
-            var radioMethod = GlazeMethod.MachineLearning;
+            var radioMethod = GlazeMethod.Onyx_MachineLearning;
 
             var result = converter.ConvertBack(true, typeof(GlazeMethod), radioMethod, CultureInfo.InvariantCulture);
 
@@ -51,7 +51,7 @@ namespace CascadePass.Glazier.UI.Tests
         {
             var converter = new GlazeMethodConverter();
 
-            var result = converter.ConvertBack(false, typeof(GlazeMethod), GlazeMethod.ColorReplacement, CultureInfo.InvariantCulture);
+            var result = converter.ConvertBack(false, typeof(GlazeMethod), GlazeMethod.Prism_ColorReplacement, CultureInfo.InvariantCulture);
 
             Assert.AreEqual(Binding.DoNothing, result);
         }

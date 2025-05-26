@@ -1,10 +1,7 @@
 ﻿using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CascadePass.Glazier.Core.Test
@@ -28,20 +25,50 @@ namespace CascadePass.Glazier.Core.Test
         public void LoadImage_ShouldLoadImage_WhenFileExists()
         {
             var glazier = new ImageGlazier();
-            string validFilePath = "test.png";
+            string testImagePath = $"test {Guid.NewGuid().ToString()}.png";
 
             using (var image = new Image<Rgba32>(100, 100))
             {
-                image.Save(validFilePath);
+                image.Save(testImagePath);
             }
 
-            glazier.LoadImage(validFilePath);
+            glazier.LoadImage(testImagePath);
 
             Assert.IsNotNull(glazier.ImageData);
             Assert.AreEqual(100, glazier.ImageData.Width);
             Assert.AreEqual(100, glazier.ImageData.Height);
 
-            File.Delete(validFilePath);
+            File.Delete(testImagePath);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FileNotFoundException))]
+        public async Task LoadImageAsync_ShouldThrowFileNotFoundException_WhenFileDoesNotExist()
+        {
+            ImageGlazier imageGlazier = new ImageGlazier();
+            string testImagePath = Guid.NewGuid().ToString();
+
+            await imageGlazier.LoadImageAsync(testImagePath);
+        }
+
+        [TestMethod]
+        public async Task LoadImageAsync_Should_Set_ImageData()
+        {
+            ImageGlazier imageGlazier = new ImageGlazier();
+            string testImagePath = $"test {Guid.NewGuid().ToString()}.png";
+
+            using (var image = new Image<Rgba32>(100, 100))
+            {
+                image.Save(testImagePath);
+            }
+
+            await imageGlazier.LoadImageAsync(testImagePath);
+
+            Assert.IsNotNull(imageGlazier.ImageData);
+            Assert.AreEqual(100, imageGlazier.ImageData.Width);
+            Assert.AreEqual(100, imageGlazier.ImageData.Height);
+
+            File.Delete(testImagePath);
         }
 
         #endregion
@@ -128,6 +155,20 @@ namespace CascadePass.Glazier.Core.Test
             glazier.Dispose();
 
             Assert.IsNull(glazier.ImageData);
+        }
+
+        [TestMethod]
+        public void Dispose_ShouldNotThrowOnSecondCall()
+        {
+            var glazier = new ImageGlazier
+            {
+                ImageData = new Image<Rgba32>(100, 100)
+            };
+
+            glazier.Dispose();
+            glazier.Dispose();
+
+            Assert.IsNull(glazier.ImageData, "ImageData should be null after disposal.");
         }
     }
 }

@@ -254,6 +254,13 @@ namespace CascadePass.Glazier.UI
 
         internal void GenerateColorReplacementPreview()
         {
+            if (this.ImageGlazier?.ImageData is null)
+            {
+                // The image hasn't been loaded yet, so we can't generate a preview.
+
+                return;
+            }
+
             var tempGlazier = new ImageGlazier
             {
                 ImageData = this.ImageGlazier.ImageData.Clone(),
@@ -264,7 +271,7 @@ namespace CascadePass.Glazier.UI
                 tempGlazier.Glaze(ColorBridge.GetRgba32FromColor(this.ReplacementColor), this.ColorSimilarityThreshold);
             }
 
-            this.PreviewImage = (BitmapImage)tempGlazier.ConvertToBitmapSource();
+            this.PreviewImage = tempGlazier.ConvertToBitmapSource();
 
         }
 
@@ -288,40 +295,13 @@ namespace CascadePass.Glazier.UI
                 {
                     Dispatcher.CurrentDispatcher.Invoke(() =>
                     {
-                        this.PreviewImage = ConvertBitmapToBitmapImage(processedImage);
+                        this.PreviewImage = ImageFormatBridge.ToBitmapImage(processedImage);
                     });
                 }
             });
 
             // Cancel the operation after 5 seconds
             Task.Delay(5000).ContinueWith(_ => mlProcessingCancellationToken.Cancel());
-        }
-
-        public static BitmapImage ConvertBitmapToBitmapImage(System.Drawing.Bitmap bitmap)
-        {
-            using MemoryStream memory = new MemoryStream();
-            bitmap.Save(memory, ImageFormat.Png);
-            memory.Position = 0;
-
-            BitmapImage bitmapImage = new BitmapImage();
-            bitmapImage.BeginInit();
-            bitmapImage.StreamSource = memory;
-            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-            bitmapImage.EndInit();
-            bitmapImage.Freeze(); // Makes it usable across threads
-
-            return bitmapImage;
-        }
-
-        public static Bitmap ConvertBitmapSourceToBitmap(BitmapSource bitmapSource)
-        {
-            using var memoryStream = new MemoryStream();
-            var encoder = new BmpBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
-            encoder.Save(memoryStream);
-            memoryStream.Position = 0;
-
-            return new Bitmap(memoryStream);
         }
 
         private void GetMostCommonColors()
@@ -454,9 +434,9 @@ namespace CascadePass.Glazier.UI
 
                 if (processedImage != null)
                 {
-                    var resizedImage = this.ResizeBitmap(GlazierViewModel.ConvertBitmapSourceToBitmap(processedImage), this.outputSize.Size);
+                    var resizedImage = ImageResizer.ResizeBitmap(ImageFormatBridge.ToBitmap(processedImage), this.outputSize.Size);
 
-                    iconMaker.SourceImage = GlazierViewModel.ConvertBitmapToBitmapImage(resizedImage);
+                    iconMaker.SourceImage = ImageFormatBridge.ToBitmapImage(resizedImage);
                 }
             }
             else if (this.GlazeMethod == GlazeMethod.MachineLearning)
@@ -470,9 +450,9 @@ namespace CascadePass.Glazier.UI
 
                 if (processedImage != null && !this.mlProcessingCancellationToken.Token.IsCancellationRequested)
                 {
-                    var resizedImage = this.ResizeBitmap(processedImage, this.outputSize.Size);
+                    var resizedImage = ImageResizer.ResizeBitmap(processedImage, this.outputSize.Size);
 
-                    iconMaker.SourceImage = GlazierViewModel.ConvertBitmapToBitmapImage(resizedImage);
+                    iconMaker.SourceImage = ImageFormatBridge.ToBitmapImage(resizedImage);
                 }
             }
 
@@ -504,7 +484,7 @@ namespace CascadePass.Glazier.UI
                     }
                     else
                     {
-                        var resizedImage = this.ResizeBitmap(processedImage, this.outputSize.Size);
+                        var resizedImage = ImageResizer.ResizeBitmap(processedImage, this.outputSize.Size);
                         resizedImage.Save(filename, ImageFormat.Png);
                     }
                 }
@@ -512,23 +492,6 @@ namespace CascadePass.Glazier.UI
 
             // Cancel the operation after 15 seconds
             Task.Delay(15000).ContinueWith(_ => mlProcessingCancellationToken.Cancel());
-        }
-
-        public Bitmap ResizeBitmap(Bitmap original, Size newSize)
-        {
-            int newWidth = (int)newSize.Width, newHeight = (int)newSize.Height;
-            Bitmap resizedBitmap = new(newWidth, newHeight);
-
-            using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(resizedBitmap))
-            {
-                graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-
-                graphics.DrawImage(original, 0, 0, newWidth, newHeight);
-            }
-
-            return resizedBitmap;
         }
 
         #region Command Implementations

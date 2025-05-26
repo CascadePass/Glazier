@@ -8,8 +8,8 @@ namespace CascadePass.Glazier.UI
     {
         None,
 
-        ColorReplacement,
+        Prism_ColorReplacement,
 
-        MachineLearning,
+        Onyx_MachineLearning,
     }
 }

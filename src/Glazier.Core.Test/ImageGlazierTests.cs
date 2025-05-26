@@ -102,49 +102,7 @@ namespace CascadePass.Glazier.Core.Test
 
         #endregion
 
-        [TestMethod]
-        public void GetMostCommonColors_ShouldReturnCorrectColors()
-        {
-            var glazier = new ImageGlazier
-            {
-                ImageData = new Image<Rgba32>(2, 2)
-            };
-
-            glazier.ImageData[0, 0] = new Rgba32(255, 0, 0);
-            glazier.ImageData[0, 1] = new Rgba32(255, 0, 0);
-            glazier.ImageData[1, 0] = new Rgba32(0, 255, 0);
-            glazier.ImageData[1, 1] = new Rgba32(0, 0, 255);
-
-            var result = glazier.GetMostCommonColors(2);
-
-            Assert.AreEqual(2, result.Count);
-            Assert.IsTrue(result.ContainsKey(new Rgba32(255, 0, 0)));
-            Assert.IsTrue(result.ContainsKey(new Rgba32(0, 255, 0)));
-        }
-
-        [TestMethod]
-        public void Glaze_ShouldReplaceMatchingColors()
-        {
-            var glazier = new ImageGlazier
-            {
-                ImageData = new Image<Rgba32>(2, 2)
-            };
-
-            glazier.ImageData[0, 0] = new Rgba32(255, 0, 0);
-            glazier.ImageData[0, 1] = new Rgba32(255, 0, 0);
-            glazier.ImageData[1, 0] = new Rgba32(0, 255, 0);
-            glazier.ImageData[1, 1] = new Rgba32(0, 0, 255);
-
-            var matchColor = new Rgba32(255, 0, 0);
-            var replacementColor = new Rgba32(0, 0, 0, 0);
-
-            glazier.Glaze(matchColor, replacementColor, 0);
-
-            Assert.AreEqual(replacementColor, glazier.ImageData[0, 0]);
-            Assert.AreEqual(replacementColor, glazier.ImageData[0, 1]);
-            Assert.AreNotEqual(replacementColor, glazier.ImageData[1, 0]);
-            Assert.AreNotEqual(replacementColor, glazier.ImageData[1, 1]);
-        }
+        #region Dispose
 
         [TestMethod]
         public void Dispose_ShouldReleaseImageData()
@@ -170,5 +128,192 @@ namespace CascadePass.Glazier.Core.Test
 
             Assert.IsNull(glazier.ImageData, "ImageData should be null after disposal.");
         }
+
+        #endregion
+
+        [TestMethod]
+        public void GetMostCommonColors_ShouldReturnCorrectColors()
+        {
+            var glazier = new ImageGlazier
+            {
+                ImageData = new Image<Rgba32>(2, 2)
+            };
+
+            glazier.ImageData[0, 0] = new Rgba32(255, 0, 0);
+            glazier.ImageData[0, 1] = new Rgba32(255, 0, 0);
+            glazier.ImageData[1, 0] = new Rgba32(0, 255, 0);
+            glazier.ImageData[1, 1] = new Rgba32(0, 0, 255);
+
+            var result = glazier.GetMostCommonColors(2);
+
+            Assert.AreEqual(2, result.Count);
+            Assert.IsTrue(result.ContainsKey(new Rgba32(255, 0, 0)));
+            Assert.IsTrue(result.ContainsKey(new Rgba32(0, 255, 0)));
+        }
+
+        #region Glaze
+
+        [TestMethod]
+        public void Glaze_ShouldReplaceMatchingColors()
+        {
+            var glazier = new ImageGlazier
+            {
+                ImageData = new Image<Rgba32>(2, 2)
+            };
+
+            glazier.ImageData[0, 0] = new Rgba32(255, 0, 0);
+            glazier.ImageData[0, 1] = new Rgba32(255, 0, 0);
+            glazier.ImageData[1, 0] = new Rgba32(0, 255, 0);
+            glazier.ImageData[1, 1] = new Rgba32(0, 0, 255);
+
+            var matchColor = new Rgba32(255, 0, 0);
+
+            glazier.Glaze(matchColor, 0);
+
+            // First pixel, which was red, should now be transparent
+            Assert.AreEqual(matchColor.R, glazier.ImageData[0, 0].R, $"R: {matchColor.R} vs {glazier.ImageData[0, 0].R}");
+            Assert.AreEqual(matchColor.G, glazier.ImageData[0, 0].G, $"G: {matchColor.G} vs {glazier.ImageData[0, 0].G}");
+            Assert.AreEqual(matchColor.B, glazier.ImageData[0, 0].B, $"B: {matchColor.B} vs {glazier.ImageData[0, 0].B}");
+            Assert.AreNotEqual(matchColor.A, glazier.ImageData[0, 0].A, $"B: {matchColor.A} vs {glazier.ImageData[0, 0].A}");
+
+            // Second pixel, which was also red, should now be transparent
+            Assert.AreEqual(matchColor.R, glazier.ImageData[0, 1].R, $"R: {matchColor.R} vs {glazier.ImageData[0, 1].R}");
+            Assert.AreEqual(matchColor.G, glazier.ImageData[0, 1].G, $"G: {matchColor.G} vs {glazier.ImageData[0, 1].G}");
+            Assert.AreEqual(matchColor.B, glazier.ImageData[0, 1].B, $"B: {matchColor.B} vs {glazier.ImageData[0, 1].B}");
+            Assert.AreNotEqual(matchColor.A, glazier.ImageData[0, 0].A, $"B: {matchColor.A} vs {glazier.ImageData[0, 1].A}");
+
+            // Other pixels,green and blue, should remain unchanged
+            Assert.AreNotEqual(matchColor, glazier.ImageData[1, 0]);
+            Assert.AreNotEqual(matchColor, glazier.ImageData[1, 1]);
+        }
+
+        #region Exceptions
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Glaze_ShouldThrowWhenImageDataIsNull()
+        {
+            var glazier = new ImageGlazier();
+
+            glazier.Glaze(new Rgba32(255, 0, 0), 0);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Glaze_ShouldThrowWhenMaskIsNull()
+        {
+            var glazier = new ImageGlazier
+            {
+                ImageData = new Image<Rgba32>(2, 2)
+            };
+
+            glazier.Glaze(new Rgba32(255, 0, 0), null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Glaze_ShouldThrowWhenMaskIsWrongSize()
+        {
+            var glazier = new ImageGlazier
+            {
+                ImageData = new Image<Rgba32>(2, 2)
+            };
+
+            var mask = new Image<Rgba32>(3, 3);
+
+            glazier.Glaze(new Rgba32(255, 0, 0), mask);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Glaze_ShouldThrowWhenToleranceIsNegative()
+        {
+            var glazier = new ImageGlazier
+            {
+                ImageData = new Image<Rgba32>(2, 2)
+            };
+
+            glazier.Glaze(new Rgba32(255, 0, 0), -1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Glaze_ShouldThrowWhenToleranceIsTooHigh()
+        {
+            var glazier = new ImageGlazier
+            {
+                ImageData = new Image<Rgba32>(2, 2)
+            };
+
+            glazier.Glaze(new Rgba32(255, 0, 0), 257);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Mask Functionality
+
+        [TestMethod]
+        public void GenerateMask_CorrectlyIdentifiesBackgroundPixels()
+        {
+            int width = 3, height = 3;
+            Image<Rgba32> testImage = new(width, height);
+
+            // Set up test pixels (middle pixel different)
+            testImage[0, 0] = new Rgba32(255, 255, 255);
+            testImage[1, 0] = new Rgba32(255, 255, 255);
+            testImage[2, 0] = new Rgba32(255, 0, 0); // Different color
+            testImage[0, 1] = new Rgba32(255, 255, 255);
+            testImage[1, 1] = new Rgba32(255, 255, 255);
+            testImage[2, 1] = new Rgba32(255, 255, 255);
+            testImage[0, 2] = new Rgba32(255, 255, 255);
+            testImage[1, 2] = new Rgba32(255, 255, 255);
+            testImage[2, 2] = new Rgba32(255, 255, 255);
+
+            var backgroundColor = new Rgba32(255, 255, 255);
+            int tolerance = 10;
+
+            var glazier = new ImageGlazier
+            {
+                ImageData = testImage
+            };
+
+            var maskImage = glazier.GenerateMask(backgroundColor, tolerance);
+
+            // Verify expected mask values
+            Assert.AreEqual(new Rgba32(0, 0, 0, 0), maskImage[0, 0]);
+            Assert.AreEqual(new Rgba32(0, 0, 0, 0), maskImage[1, 0]);
+            Assert.AreEqual(new Rgba32(255, 255, 255, 255), maskImage[2, 0]); // Should be kept
+        }
+
+        [TestMethod]
+        public void ApplyMask_CorrectlySetsAlphaToZero()
+        {
+            int width = 3, height = 3;
+            Image<Rgba32> testImage = new(width, height);
+            Image<Rgba32> mask = new(width, height);
+
+            // Initialize test image with solid colors
+            testImage[0, 0] = new Rgba32(255, 0, 0, 255); // Red
+            testImage[1, 0] = new Rgba32(0, 255, 0, 255); // Green
+            testImage[2, 0] = new Rgba32(0, 0, 255, 255); // Blue
+
+            // Initialize mask (only one pixel should remain visible)
+            mask[0, 0] = new Rgba32(0, 0, 0, 0); // Should be transparent
+            mask[1, 0] = new Rgba32(0, 0, 0, 0); // Should be transparent
+            mask[2, 0] = new Rgba32(255, 255, 255, 255); // Should remain visible
+
+            // Apply mask to image
+            ImageGlazier instance = new() { ImageData = testImage };
+            instance.ApplyMask(mask);
+
+            // Validate alpha values
+            Assert.AreEqual(0, testImage[0, 0].A); // Should be fully transparent
+            Assert.AreEqual(0, testImage[1, 0].A); // Should be fully transparent
+            Assert.AreEqual(255, testImage[2, 0].A); // Should remain visible
+        }
+
+        #endregion
     }
 }

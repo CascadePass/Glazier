@@ -30,10 +30,6 @@ namespace CascadePass.Glazier.UI
             DependencyProperty.Register("Mask", typeof(ImageSource), typeof(ImageEditor),
                 new PropertyMetadata(null, OnMaskChanged));
 
-        public static readonly DependencyProperty AllowViewingMaskProperty =
-            DependencyProperty.Register("AllowViewingMask", typeof(bool), typeof(ImageEditor),
-                new PropertyMetadata(true, OnAllowViewingMaskChanged));
-
         public static readonly DependencyProperty AllowPreviewProperty =
             DependencyProperty.Register("AllowPreview", typeof(bool), typeof(ImageEditor),
                 new PropertyMetadata(true, OnAllowPreviewChanged));
@@ -57,12 +53,6 @@ namespace CascadePass.Glazier.UI
         {
             get => (ImageSource)GetValue(MaskProperty);
             set => SetValue(MaskProperty, value);
-        }
-
-        public ImageSource AllowViewingMask
-        {
-            get => (ImageSource)GetValue(AllowViewingMaskProperty);
-            set => SetValue(AllowViewingMaskProperty, value);
         }
 
         public bool AllowPreview
@@ -89,13 +79,6 @@ namespace CascadePass.Glazier.UI
             }
         }
 
-        private static void OnAllowViewingMaskChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is not ImageEditor control)
-            {
-                return;
-            }
-        }
         private static void OnAllowPreviewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is not ImageEditor control)

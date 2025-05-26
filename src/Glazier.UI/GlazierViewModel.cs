@@ -69,7 +69,7 @@ namespace CascadePass.Glazier.UI
 
             this.threadKey = new();
 
-            this.GlazeMethod = GlazeMethod.MachineLearning;
+            this.GlazeMethod = GlazeMethod.Onyx_MachineLearning;
 
             this.debounceTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
             this.debounceTimer.Tick += this.ApplyDebouncedThreshold;
@@ -220,7 +220,7 @@ namespace CascadePass.Glazier.UI
 
         public bool IsImageNeeded => this.ImageData is null;
 
-        public bool IsColorNeeded => this.GlazeMethod == GlazeMethod.ColorReplacement;
+        public bool IsColorNeeded => this.GlazeMethod == GlazeMethod.Prism_ColorReplacement;
 
         #endregion
 
@@ -242,17 +242,17 @@ namespace CascadePass.Glazier.UI
 
         internal void GeneratePreviewImage()
         {
-            if (this.GlazeMethod == GlazeMethod.ColorReplacement)
+            if (this.GlazeMethod == GlazeMethod.Prism_ColorReplacement)
             {
-                this.GenerateColorReplacementPreview();
+                this.GeneratePrismPreview();
             }
-            else if (this.GlazeMethod == GlazeMethod.MachineLearning)
+            else if (this.GlazeMethod == GlazeMethod.Onyx_MachineLearning)
             {
                 this.GenerateOnyxPreview();
             }
         }
 
-        internal void GenerateColorReplacementPreview()
+        internal void GeneratePrismPreview()
         {
             if (this.ImageGlazier?.ImageData is null)
             {
@@ -271,8 +271,7 @@ namespace CascadePass.Glazier.UI
                 tempGlazier.Glaze(ColorBridge.GetRgba32FromColor(this.ReplacementColor), this.ColorSimilarityThreshold);
             }
 
-            this.PreviewImage = tempGlazier.ConvertToBitmapSource();
-
+            this.PreviewImage = ImageFormatBridge.ToBitmapImage(tempGlazier.ImageData);
         }
 
         internal void GenerateOnyxPreview()
@@ -428,9 +427,9 @@ namespace CascadePass.Glazier.UI
         {
             IconFileExporter iconMaker = new();
 
-            if (this.GlazeMethod == GlazeMethod.ColorReplacement)
+            if (this.GlazeMethod == GlazeMethod.Prism_ColorReplacement)
             {
-                var processedImage = this.ImageGlazier.ConvertToBitmapSource();
+                var processedImage = ImageFormatBridge.ToBitmapImage(this.ImageGlazier.ImageData);
 
                 if (processedImage != null)
                 {
@@ -439,7 +438,7 @@ namespace CascadePass.Glazier.UI
                     iconMaker.SourceImage = ImageFormatBridge.ToBitmapImage(resizedImage);
                 }
             }
-            else if (this.GlazeMethod == GlazeMethod.MachineLearning)
+            else if (this.GlazeMethod == GlazeMethod.Onyx_MachineLearning)
             {
                 this.CancelPreviousProcessing();
 
@@ -462,7 +461,7 @@ namespace CascadePass.Glazier.UI
         internal void SaveColorReplacementImage(string filename)
         {
             this.ImageGlazier.Glaze(ColorBridge.GetRgba32FromColor(this.ReplacementColor), this.ColorSimilarityThreshold);
-            this.ImageData = (BitmapImage)this.ImageGlazier.ConvertToBitmapSource();
+            this.ImageData = ImageFormatBridge.ToBitmapImage(this.ImageGlazier.ImageData);
             this.ImageGlazier.SaveImage(filename/*, this.outputSize.Size*/);
         }
 
@@ -518,11 +517,11 @@ namespace CascadePass.Glazier.UI
                     return;
                 }
 
-                if (this.GlazeMethod == GlazeMethod.ColorReplacement)
+                if (this.GlazeMethod == GlazeMethod.Prism_ColorReplacement)
                 {
                     this.SaveColorReplacementImage(filename);
                 }
-                else if (this.GlazeMethod == GlazeMethod.MachineLearning)
+                else if (this.GlazeMethod == GlazeMethod.Onyx_MachineLearning)
                 {
                     this.SaveOnyxImage(filename);
                 }
@@ -541,18 +540,27 @@ namespace CascadePass.Glazier.UI
         {
             if (this.IsMaskVisible)
             {
-                using MemoryStream memoryStream = new();
-                this.onyx.Mask.Save(memoryStream, ImageFormat.Png);
-                memoryStream.Position = 0;
+                if (this.GlazeMethod == GlazeMethod.Onyx_MachineLearning && this.onyx is not null)
+                {
+                    using MemoryStream memoryStream = new();
+                    this.onyx.Mask.Save(memoryStream, ImageFormat.Png);
+                    memoryStream.Position = 0;
 
-                BitmapImage bitmapImage = new();
-                bitmapImage.BeginInit();
-                bitmapImage.StreamSource = memoryStream;
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.EndInit();
-                bitmapImage.Freeze();
+                    BitmapImage bitmapImage = new();
+                    bitmapImage.BeginInit();
+                    bitmapImage.StreamSource = memoryStream;
+                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapImage.EndInit();
+                    bitmapImage.Freeze();
 
-                this.PreviewImage = bitmapImage;
+                    this.PreviewImage = bitmapImage;
+                }
+                else if(this.GlazeMethod == GlazeMethod.Prism_ColorReplacement && this.ImageGlazier?.ImageData is not null)
+                {
+                    var mask = this.ImageGlazier.Mask ?? this.ImageGlazier.GenerateMask(ColorBridge.GetRgba32FromColor(this.ReplacementColor), this.ColorSimilarityThreshold);;
+
+                    this.PreviewImage = ImageFormatBridge.ToBitmapImage(mask);
+                }
             }
             else
             {

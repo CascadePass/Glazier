@@ -59,7 +59,7 @@ namespace CascadePass.Glazier.UI
                     Name = Resources.Prism,
                     Description = Resources.AlgorithmDescription_Prism,
                     IconPath = "/Images/Icons/ColorPalette.png",
-                    Method = GlazeMethod.ColorReplacement,
+                    Method = GlazeMethod.Prism_ColorReplacement,
                 },
 
                 new GlazeMethodViewModel
@@ -67,7 +67,7 @@ namespace CascadePass.Glazier.UI
                     Name = Resources.Onyx,
                     Description = Resources.AlgorithmDescription_Onyx,
                     IconPath = "/Images/Icons/ColorDialog.png",
-                    Method = GlazeMethod.MachineLearning,
+                    Method = GlazeMethod.Onyx_MachineLearning,
                 }
             ];
         }

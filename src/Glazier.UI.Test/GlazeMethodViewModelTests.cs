@@ -17,13 +17,13 @@ namespace CascadePass.Glazier.UI.Tests
             viewModel.Name = "TestName";
             viewModel.Description = "TestDescription";
             viewModel.IconPath = "/Images/TestIcon.png";
-            viewModel.Method = GlazeMethod.ColorReplacement;
+            viewModel.Method = GlazeMethod.Prism_ColorReplacement;
             viewModel.MethodDescription = "TestMethodDescription";
 
             Assert.AreEqual("TestName", viewModel.Name);
             Assert.AreEqual("TestDescription", viewModel.Description);
             Assert.AreEqual("/Images/TestIcon.png", viewModel.IconPath);
-            Assert.AreEqual(GlazeMethod.ColorReplacement, viewModel.Method);
+            Assert.AreEqual(GlazeMethod.Prism_ColorReplacement, viewModel.Method);
             Assert.AreEqual("TestMethodDescription", viewModel.MethodDescription);
         }
 

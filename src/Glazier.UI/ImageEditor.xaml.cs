@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CascadePass.Glazier.UI
 {
@@ -22,13 +12,17 @@ namespace CascadePass.Glazier.UI
     {
         #region Dependency Properties
 
-        public static readonly DependencyProperty ImageProperty =
-            DependencyProperty.Register("Image", typeof(ImageSource), typeof(ImageEditor),
-                new PropertyMetadata(null, OnImageChanged));
+        public static readonly DependencyProperty GlazierViewModelProperty =
+            DependencyProperty.Register("GlazierViewModel", typeof(GlazierViewModel), typeof(ImageEditor),
+                new PropertyMetadata(null, OnGlazierViewModelChanged));
 
-        public static readonly DependencyProperty MaskProperty =
-            DependencyProperty.Register("Mask", typeof(ImageSource), typeof(ImageEditor),
-                new PropertyMetadata(null, OnMaskChanged));
+        //public static readonly DependencyProperty ImageProperty =
+        //    DependencyProperty.Register("Image", typeof(ImageSource), typeof(ImageEditor),
+        //        new PropertyMetadata(null, OnImageChanged));
+
+        //public static readonly DependencyProperty MaskProperty =
+        //    DependencyProperty.Register("Mask", typeof(ImageSource), typeof(ImageEditor),
+        //        new PropertyMetadata(null, OnMaskChanged));
 
         public static readonly DependencyProperty AllowPreviewProperty =
             DependencyProperty.Register("AllowPreview", typeof(bool), typeof(ImageEditor),
@@ -43,17 +37,23 @@ namespace CascadePass.Glazier.UI
 
         #region Dependency Properties
 
-        public ImageSource Image
+        public GlazierViewModel GlazierViewModel
         {
-            get => (ImageSource)GetValue(ImageProperty);
-            set => SetValue(ImageProperty, value);
+            get => (GlazierViewModel)GetValue(GlazierViewModelProperty);
+            set => SetValue(GlazierViewModelProperty, value);
         }
 
-        public ImageSource Mask
-        {
-            get => (ImageSource)GetValue(MaskProperty);
-            set => SetValue(MaskProperty, value);
-        }
+        //public ImageSource Image
+        //{
+        //    get => (ImageSource)GetValue(ImageProperty);
+        //    set => SetValue(ImageProperty, value);
+        //}
+
+        //public ImageSource Mask
+        //{
+        //    get => (ImageSource)GetValue(MaskProperty);
+        //    set => SetValue(MaskProperty, value);
+        //}
 
         public bool AllowPreview
         {
@@ -63,19 +63,19 @@ namespace CascadePass.Glazier.UI
 
         #endregion
 
-        private static void OnImageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private void UpdateBinding(BindingExpression binding)
         {
-            if (d is not ImageEditor control)
+            if (binding?.Target is DependencyObject target)
             {
-                return;
-            }
-        }
-
-        private static void OnMaskChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is not ImageEditor control)
-            {
-                return;
+                var dispatcher = Dispatcher;
+                if (dispatcher != null && !dispatcher.CheckAccess())
+                {
+                    dispatcher.Invoke(() => binding.UpdateTarget());
+                }
+                else
+                {
+                    binding.UpdateTarget();
+                }
             }
         }
 
@@ -84,6 +84,24 @@ namespace CascadePass.Glazier.UI
             if (d is not ImageEditor control)
             {
                 return;
+            }
+        }
+
+        private static void OnGlazierViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is not ImageEditor control || control.GlazierViewModel is null)
+            {
+                return;
+            }
+
+            control.GlazierViewModel.PropertyChanged += control.GlazierViewModel_PropertyChanged;
+        }
+
+        private void GlazierViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (string.Equals(e.PropertyName, nameof(GlazierViewModel.PreviewImage)))
+            {
+                this.UpdateBinding(BindingOperations.GetBindingExpression(this.PreviewImage, Image.SourceProperty));
             }
         }
     }

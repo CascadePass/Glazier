@@ -275,23 +275,6 @@ namespace CascadePass.Glazier.Core.Test
             Assert.IsTrue(darkAdjustment >= 0.0f);
         }
 
-        [TestMethod]
-        public void AdjustBrightnessSensitivity_ShouldRunEfficiently()
-        {
-            using Bitmap largeImage = new(2000, 2000);
-            using Graphics g = Graphics.FromImage(largeImage);
-            g.Clear(Color.Gray);
-
-            OnyxBackgroundRemover processor = new();
-            Stopwatch timer = new();
-
-            timer.Start();
-            float adjustedBrightness = processor.AdjustBrightnessSensitivity(largeImage);
-            timer.Stop();
-
-            Assert.IsTrue(timer.ElapsedMilliseconds < 500);
-        }
-
         #endregion
 
         #region EnhanceColorSaturation

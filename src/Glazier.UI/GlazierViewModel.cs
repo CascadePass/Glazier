@@ -575,7 +575,7 @@ namespace CascadePass.Glazier.UI
 
             ImageEditor imageEditor = new()
             {
-                Image = this.PreviewImage,
+                GlazierViewModel = this,
                 Background = backgroundBrush,
                 AllowPreview = false,
             };

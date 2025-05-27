@@ -120,7 +120,7 @@
                 <local:ImageEditor
                     x:Name="PreviewImage"
                     Grid.Column="2"
-                    Image="{Binding PreviewImage}" />
+                    GlazierViewModel="{Binding}" />
                 </Grid>
         </Border>
     </DockPanel>

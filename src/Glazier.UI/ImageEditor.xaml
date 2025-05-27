@@ -15,7 +15,7 @@
 
             <Image
                 x:Name="PreviewImage"
-                Source="{Binding Image, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
+                Source="{Binding GlazierViewModel.PreviewImage, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
                 Stretch="Uniform"
                 VerticalAlignment="Center"
                 Width="{Binding ActualWidth, ElementName=InkCanvasContainer}"
@@ -23,7 +23,8 @@
         </InkCanvas>
 
         <local:LivePreviewToolbar
-            BackgroundRemovalMethod="{Binding GlazeMethod}"
+            GlazierViewModel="{Binding GlazierViewModel}"
+            BackgroundRemovalMethod="{Binding GlazierViewModel.GlazeMethod}"
             AllowPreview="{Binding AllowPreview, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
             />
     </Grid>

@@ -1,20 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CascadePass.Glazier.UI
 {
@@ -24,6 +11,10 @@ namespace CascadePass.Glazier.UI
     public partial class LivePreviewToolbar : UserControl
     {
         #region Dependency Properties
+
+        public static readonly DependencyProperty GlazierViewModelProperty =
+            DependencyProperty.Register("GlazierViewModel", typeof(GlazierViewModel), typeof(LivePreviewToolbar),
+                new PropertyMetadata(null, null));
 
         public static readonly DependencyProperty IsSettingsExpandedProperty =
             DependencyProperty.Register("IsSettingsExpanded", typeof(bool), typeof(LivePreviewToolbar),
@@ -54,15 +45,21 @@ namespace CascadePass.Glazier.UI
         public LivePreviewToolbar()
         {
             this.InitializeComponent();
+
+            this.Loaded += this.ToolbarBorder_Loaded;
         }
 
         #region Properties
 
-        internal GlazierViewModel GlazierViewModel { get; set; }
-
         internal DateTime PopupLastOpened { get; set; }
 
         #region Dependency Properties
+
+        public GlazierViewModel GlazierViewModel
+        {
+            get => (GlazierViewModel)GetValue(GlazierViewModelProperty);
+            set => SetValue(GlazierViewModelProperty, value);
+        }
 
         public bool IsSettingsExpanded
         {
@@ -162,21 +159,6 @@ namespace CascadePass.Glazier.UI
 
         #endregion
 
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-
-            if (this.Parent is FrameworkElement frameworkElement && frameworkElement.DataContext is GlazierViewModel vm)
-            {
-                this.GlazierViewModel = vm;
-                this.GlazierViewModel.PropertyChanged += this.OnGlazierViewModelPropertyChanged;
-                this.BackgroundRemovalMethod = this.GlazierViewModel.GlazeMethod;
-
-                DependencyPropertyChangedEventArgs args = new(BackgroundRemovalMethodProperty, null, this.BackgroundRemovalMethod);
-                LivePreviewToolbar.OnBackgroundRemovalMethodChanged(this, args);
-            }
-        }
-
         private void OnGlazierViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(GlazierViewModel.GlazeMethod))
@@ -203,6 +185,16 @@ namespace CascadePass.Glazier.UI
 
         private void ToolbarBorder_Loaded(object sender, RoutedEventArgs e)
         {
+            if (this.Parent is FrameworkElement frameworkElement && frameworkElement.DataContext is GlazierViewModel vm)
+            {
+                this.GlazierViewModel = vm;
+                this.GlazierViewModel.PropertyChanged += this.OnGlazierViewModelPropertyChanged;
+                this.BackgroundRemovalMethod = this.GlazierViewModel.GlazeMethod;
+
+                DependencyPropertyChangedEventArgs args = new(BackgroundRemovalMethodProperty, null, this.BackgroundRemovalMethod);
+                LivePreviewToolbar.OnBackgroundRemovalMethodChanged(this, args);
+            }
+
             DependencyPropertyDescriptor
                 .FromProperty(Border.OpacityProperty, typeof(Border))
                 .AddValueChanged(ToolbarBorder, OnOpacityChanged)

@@ -60,10 +60,6 @@ namespace CascadePass.Glazier.UI
             {
                 this.UpdateBinding(BindingOperations.GetBindingExpression(this.DisplayImage, Image.SourceProperty));
             }
-            else if (e.PropertyName == nameof(GlazierViewModel.PreviewImage))
-            {
-                this.UpdateBinding(BindingOperations.GetBindingExpression(this.PreviewImage, ImageEditor.ImageProperty));
-            }
             else if (e.PropertyName == nameof(GlazierViewModel.SourceFilename))
             {
                 this.UpdateBinding(BindingOperations.GetBindingExpression(this.InputFile, CommandTextBox.UserTextProperty));
@@ -76,11 +72,6 @@ namespace CascadePass.Glazier.UI
                 this.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorPicker, ColorPicker.SelectedColorProperty));
                 this.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorPicker, ColorPicker.BackgroundProperty));
             }
-            //else if (e.PropertyName == nameof(GlazierViewModel.IsImageLoaded))
-            //{
-            //    this.UpdateBinding(BindingOperations.GetBindingExpression(this.DestinationFile, CommandTextBox.VisibilityProperty));
-            //    this.UpdateBinding(BindingOperations.GetBindingExpression(this.DestinationFileLabel, TextBlock.VisibilityProperty));
-            //}
             else if (e.PropertyName == nameof(GlazierViewModel.IsImageNeeded))
             {
                 this.UpdateBinding(BindingOperations.GetBindingExpression(this.ImagePreviewSection, TextBlock.VisibilityProperty));

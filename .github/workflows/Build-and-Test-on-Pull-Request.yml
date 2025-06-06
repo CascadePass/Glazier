@@ -25,7 +25,7 @@ jobs:
       run: dotnet build src/Glazier.sln --configuration Debug
 
     - name: Run tests
-      run: dotnet test src/Glazier.sln --configuration Debug
+      run: dotnet test src/Glazier.sln --configuration Debug --diag testLog.txt
 
     - name: Publish test results
       uses: actions/upload-artifact@v4

@@ -13,9 +13,13 @@
 
   <ItemGroup>
     <None Remove="Images\ColorPaintbrush.png" />
+    <None Remove="Images\CrystalBall2.ico" />
+    <None Remove="Images\Icons\Close.White.png" />
+    <None Remove="Images\Icons\CollapseLeft.png" />
     <None Remove="Images\Icons\ColorDialog.png" />
     <None Remove="Images\Icons\ColorPalette.png" />
     <None Remove="Images\Icons\CrystallBall.png" />
+    <None Remove="Images\Icons\FormatPageLeft.png" />
     <None Remove="Images\Icons\Infinity.png" />
     <None Remove="Images\Icons\InkCanvas.png" />
     <None Remove="Images\Icons\InkPresenter.png" />
@@ -27,12 +31,17 @@
     <None Remove="Images\Icons\Ruler.png" />
     <None Remove="Images\Icons\Search.png" />
     <None Remove="Images\Icons\Settings.png" />
+    <None Remove="Images\Icons\TableFillLeft.png" />
     <None Remove="Images\Onyx.1.png" />
     <None Remove="Images\Onyx.3.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Images\GlazierIcon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Themed\DarkMode.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,16 +53,20 @@
     <Resource Include="Images\Background3-Dark.png" />
     <Resource Include="Images\ColorPaintbrush.png" />
     <Resource Include="Images\ColorPaintbrush-2.png" />
+    <Resource Include="Images\CrystalBall2.ico" />
     <Resource Include="Images\GlazierIcon.png" />
     <Resource Include="Images\Background-ColorPicker.png" />
     <Resource Include="Images\Background-Dark.png" />
     <Resource Include="Images\Background-Light.png" />
     <Resource Include="Images\Background2-Dark.png" />
+    <Resource Include="Images\Icons\Close.White.png" />
+    <Resource Include="Images\Icons\CollapseLeft.png" />
     <Resource Include="Images\Icons\ColorDialog.png" />
     <Resource Include="Images\Icons\ColorPalette.png" />
-    <Resource Include="Images\Icons\CrystallBall.png" />
+    <Resource Include="Images\CrystallBall.png" />
     <Resource Include="Images\Icons\FolderOpenBlue.png" />
     <Resource Include="Images\Icons\FolderOpened.png" />
+    <Resource Include="Images\Icons\FormatPageLeft.png" />
     <Resource Include="Images\Icons\Infinity.png" />
     <Resource Include="Images\Icons\InkCanvas.png" />
     <Resource Include="Images\Icons\InkPresenter.png" />
@@ -66,8 +79,12 @@
     <Resource Include="Images\Icons\Save.png" />
     <Resource Include="Images\Icons\Search.png" />
     <Resource Include="Images\Icons\Settings.png" />
+    <Resource Include="Images\Icons\TableFillLeft.png" />
     <Resource Include="Images\Onyx.1.png" />
     <Resource Include="Images\Onyx.3.png" />
+    <Resource Include="Images\Themed\HighContrastMode.png" />
+    <Resource Include="Images\Themed\InferMode.png" />
+    <Resource Include="Images\Themed\LightMode.png" />
   </ItemGroup>
 
   <ItemGroup>

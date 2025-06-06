@@ -10,7 +10,8 @@
     <Grid>
         <InkCanvas
             Name="InkCanvasContainer"
-            Background="Transparent"
+            Margin="0"
+            Background="{x:Null}"
             EditingMode="None">
 
             <Image
@@ -18,13 +19,17 @@
                 Source="{Binding GlazierViewModel.PreviewImage, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
                 Stretch="Uniform"
                 VerticalAlignment="Center"
+                HorizontalAlignment="Center"
                 Width="{Binding ActualWidth, ElementName=InkCanvasContainer}"
-                Height="{Binding ActualHeight, ElementName=InkCanvasContainer}"/>
+                Height="{Binding ActualHeight, ElementName=InkCanvasContainer}"
+                />
         </InkCanvas>
 
         <local:LivePreviewToolbar
-            GlazierViewModel="{Binding GlazierViewModel}"
-            BackgroundRemovalMethod="{Binding GlazierViewModel.GlazeMethod}"
+            DataContext="{Binding GlazierViewModel, RelativeSource={RelativeSource AncestorType=UserControl}}"
+            GlazierViewModel="{Binding GlazierViewModel, RelativeSource={RelativeSource AncestorType=UserControl}}"
+            WorkspaceViewModel="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
+            BackgroundRemovalMethod="{Binding GlazierViewModel.GlazeMethod, RelativeSource={RelativeSource AncestorType=UserControl}}"
             AllowPreview="{Binding AllowPreview, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
             />
     </Grid>

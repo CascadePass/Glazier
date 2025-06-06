@@ -1,15 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
 
 namespace CascadePass.Glazier.UI
 {
@@ -19,138 +16,23 @@ namespace CascadePass.Glazier.UI
     public partial class MainWindow : Window
     {
         private string[] supportedExtensions;
-        private IThemeListener themeListener;
 
         public MainWindow()
         {
-            this.themeListener = new ThemeListener();
             this.InitializeComponent();
 
             this.supportedExtensions = [".png", ".jpg", ".bmp", ".tiff", ".tif"];
 
-            var vm = this.DataContext as ViewModel;
-
-            vm.PropertyChanged += this.ViewModel_PropertyChanged;
-        }
-
-
-        private Color GetPixelColor(Image image, int x, int y)
-        {
-            if (image.Source is BitmapSource bitmapSource)
+            if (this.DataContext is WorkspaceViewModel wvm)
             {
-                // There are 4 bytes per pixel (BGRA format)
-                int stride = bitmapSource.PixelWidth * 4;
-                byte[] pixels = new byte[stride * bitmapSource.PixelHeight];
-
-                bitmapSource.CopyPixels(pixels, stride, 0);
-
-                int index = (y * stride) + (x * 4); // Calculate pixel index
-                if (index + 3 < pixels.Length) // Ensure index is valid
-                {
-                    return Color.FromArgb(255, pixels[index + 2], pixels[index + 1], pixels[index]);
-                }
-            }
-
-            return Colors.Transparent;
-        }
-
-        private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(GlazierViewModel.ImageData))
-            {
-                this.UpdateBinding(BindingOperations.GetBindingExpression(this.DisplayImage, Image.SourceProperty));
-            }
-            else if (e.PropertyName == nameof(GlazierViewModel.SourceFilename))
-            {
-                this.UpdateBinding(BindingOperations.GetBindingExpression(this.InputFile, CommandTextBox.UserTextProperty));
-            }
-            else if (e.PropertyName == nameof(GlazierViewModel.ReplacementColor))
-            {
-                this.ColorPicker.SelectedColor = ((GlazierViewModel)this.DataContext).ReplacementColor;
-
-                this.UpdateBinding(BindingOperations.GetBindingExpression(this.DisplayImage, Image.SourceProperty));
-                this.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorPicker, ColorPicker.SelectedColorProperty));
-                this.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorPicker, ColorPicker.BackgroundProperty));
-            }
-            else if (e.PropertyName == nameof(GlazierViewModel.IsImageNeeded))
-            {
-                this.UpdateBinding(BindingOperations.GetBindingExpression(this.ImagePreviewSection, TextBlock.VisibilityProperty));
-
-                this.HideInputForm();
-
-            }
-            else if (e.PropertyName == nameof(GlazierViewModel.IsColorNeeded))
-            {
-                this.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorPicker, TextBlock.VisibilityProperty));
-                this.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorLabel, TextBlock.VisibilityProperty));
+                wvm.PropertyChanged += WorkspaceViewModel_PropertyChanged;
+                wvm.GlazierViewModel.PropertyChanged += this.GlazierViewModel_PropertyChanged;
             }
         }
 
-        private void HideInputForm()
-        {
-            var animation = new DoubleAnimation
-            {
-                From = this.InputFormBorder.ActualHeight,
-                To = 0,
-                Duration = TimeSpan.FromSeconds(0.5)
-            };
+        protected WorkspaceViewModel WorkspaceViewModel => this.DataContext as WorkspaceViewModel;
 
-            var storyboard = new Storyboard();
-            Storyboard.SetTarget(animation, this.InputFormBorder);
-            Storyboard.SetTargetProperty(animation, new PropertyPath("Height"));
-
-            storyboard.Children.Add(animation);
-            storyboard.Begin();
-        }
-
-        private void ShowInputForm(double originalHeight)
-        {
-            var animation = new DoubleAnimation
-            {
-                From = 0,
-                To = originalHeight,
-                Duration = TimeSpan.FromSeconds(0.5)
-            };
-
-            var storyboard = new Storyboard();
-            Storyboard.SetTarget(animation, this.InputFormBorder);
-            Storyboard.SetTargetProperty(animation, new PropertyPath("Height"));
-
-            storyboard.Children.Add(animation);
-            storyboard.Begin();
-        }
-
-        private void UpdateBinding(BindingExpression binding)
-        {
-            if (binding?.Target is DependencyObject target)
-            {
-                var dispatcher = Dispatcher;
-                if (dispatcher != null && !dispatcher.CheckAccess())
-                {
-                    dispatcher.Invoke(() => binding.UpdateTarget());
-                }
-                else
-                {
-                    binding.UpdateTarget();
-                }
-            }
-        }
-
-        private void DisplayImage_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is Image image && this.DataContext is GlazierViewModel glazier)
-            {
-                // Get the click position relative to the image
-                Point clickPosition = e.GetPosition(image);
-
-                // Extract pixel color at the click position
-                Color pixelColor = this.GetPixelColor(this.DisplayImage, (int)clickPosition.X, (int)clickPosition.Y);
-                glazier.ReplacementColor = pixelColor;
-
-                //var binding = BindingOperations.GetBindingExpression(this.ColorPicker, ColorPicker.SelectedColorProperty);
-                //binding?.UpdateTarget();
-            }
-        }
+        protected bool UseAnimation => this.WorkspaceViewModel?.Settings?.UseAnimation ?? true;
 
         #region Drag and Drop
 
@@ -163,9 +45,9 @@ namespace CascadePass.Glazier.UI
 
                 if (file is not null)
                 {
-                    if(this.DataContext is GlazierViewModel vm)
+                    if(this.DataContext is WorkspaceViewModel vm)
                     {
-                        vm.SourceFilename = file;
+                        vm.GlazierViewModel.SourceFilename = file;
                     }
                 }
             }
@@ -217,5 +99,42 @@ namespace CascadePass.Glazier.UI
         }
 
         #endregion
+
+
+        private void WorkspaceViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(WorkspaceViewModel.IsSettingsPageVisible))
+            {
+                if (this.WorkspaceViewModel.IsSettingsPageVisible)
+                {
+                    Animator.ShowSettingsPanel(this.SettingsEditor, this, this.UseAnimation);
+                }
+                else
+                {
+                    Animator.HideSettingsPanel(this.SettingsEditor, this, this.UseAnimation);
+                }
+            }
+            else if (e.PropertyName == nameof(WorkspaceViewModel.CurrentFont))
+            {
+                this.FontFamily = this.WorkspaceViewModel.CurrentFont;
+            }
+        }
+
+        private void GlazierViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(GlazierViewModel.SourceFilename))
+            {
+                //BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.InputFile, CommandTextBox.UserTextProperty));
+            }
+            else if (e.PropertyName == nameof(GlazierViewModel.ReplacementColor))
+            {
+            }
+            else if (e.PropertyName == nameof(GlazierViewModel.IsImageNeeded))
+            {
+                //BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorTolerance, Slider.VisibilityProperty));
+
+                Animator.HideInputForm(this.InputFormBorder);
+            }
+        }
     }
 }

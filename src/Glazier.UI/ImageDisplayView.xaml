@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="CascadePass.Glazier.UI.ImageDisplayView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CascadePass.Glazier.UI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Border
+        x:Name="ImagePreviewSection"
+        Style="{DynamicResource ImagesBorderStyle}"
+        Visibility="{Binding GlazierViewModel.IsImageLoaded, Converter={StaticResource boolToVisibility}}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding OriginalImageColumnWidth}" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!--<InkCanvas
+                Name="InkCanvasContainer"
+                EditingMode="None"
+                Margin="0"
+                Background="{x:Null}"
+                HorizontalAlignment="Center"
+                MaxWidth="400"
+                Visibility="{Binding Settings.ShowOriginalImage, Converter={StaticResource boolToVisibility}}">-->
+            <Image
+                x:Name="DisplayImage"
+                Grid.Column="0"
+                Source="{Binding GlazierViewModel.ImageData}"
+                Stretch="Uniform"
+                Cursor="Cross"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Stretch"
+                MouseDown="DisplayImage_MouseDown"
+                />
+            <!--</InkCanvas>-->
+
+            <GridSplitter
+                x:Name="ImageSizeGridSplitter"
+                Grid.Column="1"
+                Width="3"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                Visibility="{Binding Settings.ShowOriginalImage, Converter={StaticResource boolToVisibility}}"
+                ShowsPreview="True" />
+
+            <local:ImageEditor
+                x:Name="PreviewImage"
+                Grid.Column="2"
+                GlazierViewModel="{Binding GlazierViewModel}" />
+        </Grid>
+    </Border>
+</UserControl>

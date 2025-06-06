@@ -97,11 +97,56 @@ namespace CascadePass.Glazier.UI {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Behind Image Effect.
+        /// </summary>
+        public static string BehindImageBrush {
+            get {
+                return ResourceManager.GetString("BehindImageBrush", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Blue.
         /// </summary>
         public static string Blue {
             get {
                 return ResourceManager.GetString("Blue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crosshatch.
+        /// </summary>
+        public static string Brush_Crosshatch {
+            get {
+                return ResourceManager.GetString("Brush_Crosshatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dark Translucent Black.
+        /// </summary>
+        public static string Brush_TranslucentBlack {
+            get {
+                return ResourceManager.GetString("Brush_TranslucentBlack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Font.
+        /// </summary>
+        public static string Font {
+            get {
+                return ResourceManager.GetString("Font", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sizing.
+        /// </summary>
+        public static string FontSize {
+            get {
+                return ResourceManager.GetString("FontSize", resourceCulture);
             }
         }
         
@@ -129,6 +174,24 @@ namespace CascadePass.Glazier.UI {
         public static string Green {
             get {
                 return ResourceManager.GetString("Green", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model Settings.
+        /// </summary>
+        public static string Header_ModelSettings {
+            get {
+                return ResourceManager.GetString("Header_ModelSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visual Settings.
+        /// </summary>
+        public static string Header_VisualSettings {
+            get {
+                return ResourceManager.GetString("Header_VisualSettings", resourceCulture);
             }
         }
         
@@ -165,6 +228,15 @@ namespace CascadePass.Glazier.UI {
         public static string Label_Files {
             get {
                 return ResourceManager.GetString("Label_Files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ONNX Model File.
+        /// </summary>
+        public static string Label_ModelFile {
+            get {
+                return ResourceManager.GetString("Label_ModelFile", resourceCulture);
             }
         }
         
@@ -237,6 +309,60 @@ namespace CascadePass.Glazier.UI {
         public static string Red {
             get {
                 return ResourceManager.GetString("Red", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Theme.
+        /// </summary>
+        public static string Theme {
+            get {
+                return ResourceManager.GetString("Theme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dark.
+        /// </summary>
+        public static string Theme_Dark {
+            get {
+                return ResourceManager.GetString("Theme_Dark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to High Contrast.
+        /// </summary>
+        public static string Theme_HighContrast {
+            get {
+                return ResourceManager.GetString("Theme_HighContrast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Light.
+        /// </summary>
+        public static string Theme_Light {
+            get {
+                return ResourceManager.GetString("Theme_Light", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Follow Windows setting.
+        /// </summary>
+        public static string Theme_None {
+            get {
+                return ResourceManager.GetString("Theme_None", resourceCulture);
             }
         }
         

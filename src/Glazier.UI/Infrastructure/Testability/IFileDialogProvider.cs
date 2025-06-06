@@ -4,5 +4,7 @@
     {
         string BrowseToOpenImageFile();
         string BrowseToSaveImageFile();
+
+        string BrowseToOpenOnyxModelFile();
     }
 }

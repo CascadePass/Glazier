@@ -16,6 +16,10 @@ namespace CascadePass.Glazier.UI
             DependencyProperty.Register("GlazierViewModel", typeof(GlazierViewModel), typeof(LivePreviewToolbar),
                 new PropertyMetadata(null, null));
 
+        public static readonly DependencyProperty WorkspaceViewModelProperty =
+            DependencyProperty.Register("WorkspaceViewModel", typeof(WorkspaceViewModel), typeof(LivePreviewToolbar),
+                new PropertyMetadata(null, OnWorkspaceViewModelChanged));
+
         public static readonly DependencyProperty IsSettingsExpandedProperty =
             DependencyProperty.Register("IsSettingsExpanded", typeof(bool), typeof(LivePreviewToolbar),
                 new PropertyMetadata(false, OnPopupOpenChanged));
@@ -59,6 +63,12 @@ namespace CascadePass.Glazier.UI
         {
             get => (GlazierViewModel)GetValue(GlazierViewModelProperty);
             set => SetValue(GlazierViewModelProperty, value);
+        }
+
+        public WorkspaceViewModel WorkspaceViewModel
+        {
+            get => (WorkspaceViewModel)GetValue(WorkspaceViewModelProperty);
+            set => SetValue(WorkspaceViewModelProperty, value);
         }
 
         public bool IsSettingsExpanded
@@ -157,7 +167,23 @@ namespace CascadePass.Glazier.UI
             }
         }
 
+        private static void OnWorkspaceViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is not LivePreviewToolbar control || control.WorkspaceViewModel is null)
+            {
+                return;
+            }
+
+            control.WorkspaceViewModel.PropertyChanged += control.WorkspaceViewModel_PropertyChanged;
+            //control.WorkspaceViewModel.GlazierViewModel.PropertyChanged += control.GlazierViewModel_PropertyChanged;
+        }
+
         #endregion
+
+        internal void WorkspaceViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+        }
+
 
         private void OnGlazierViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -207,5 +233,13 @@ namespace CascadePass.Glazier.UI
         }
 
         #endregion
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(Application.Current?.MainWindow is not null && Application.Current.MainWindow.DataContext is WorkspaceViewModel vm)
+            {
+                vm.IsSettingsPageVisible = true;
+            }
+        }
     }
 }

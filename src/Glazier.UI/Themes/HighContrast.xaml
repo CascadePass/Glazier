@@ -10,6 +10,7 @@
     <SolidColorBrush x:Key="ToggleButtonSelectedMouseOverBrush" Color="Black"/>
     <SolidColorBrush x:Key="ToolbarBackgroundBrush" Color="LightGray"/>
     <SolidColorBrush x:Key="ToolbarBorderBrush" Color="DarkGray"/>
+    <SolidColorBrush x:Key="MouseOverImageBorderBrush" Color="{DynamicResource SystemColors.ActiveBorder}"/>
 
 
     <SolidColorBrush x:Key="SplitterBrush" Color="{DynamicResource SystemColors.ControlDark}" />

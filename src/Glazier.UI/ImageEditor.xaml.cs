@@ -16,14 +16,6 @@ namespace CascadePass.Glazier.UI
             DependencyProperty.Register("GlazierViewModel", typeof(GlazierViewModel), typeof(ImageEditor),
                 new PropertyMetadata(null, OnGlazierViewModelChanged));
 
-        //public static readonly DependencyProperty ImageProperty =
-        //    DependencyProperty.Register("Image", typeof(ImageSource), typeof(ImageEditor),
-        //        new PropertyMetadata(null, OnImageChanged));
-
-        //public static readonly DependencyProperty MaskProperty =
-        //    DependencyProperty.Register("Mask", typeof(ImageSource), typeof(ImageEditor),
-        //        new PropertyMetadata(null, OnMaskChanged));
-
         public static readonly DependencyProperty AllowPreviewProperty =
             DependencyProperty.Register("AllowPreview", typeof(bool), typeof(ImageEditor),
                 new PropertyMetadata(true, OnAllowPreviewChanged));
@@ -32,7 +24,7 @@ namespace CascadePass.Glazier.UI
 
         public ImageEditor()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         #region Dependency Properties
@@ -43,18 +35,6 @@ namespace CascadePass.Glazier.UI
             set => SetValue(GlazierViewModelProperty, value);
         }
 
-        //public ImageSource Image
-        //{
-        //    get => (ImageSource)GetValue(ImageProperty);
-        //    set => SetValue(ImageProperty, value);
-        //}
-
-        //public ImageSource Mask
-        //{
-        //    get => (ImageSource)GetValue(MaskProperty);
-        //    set => SetValue(MaskProperty, value);
-        //}
-
         public bool AllowPreview
         {
             get => (bool)GetValue(AllowPreviewProperty);
@@ -62,22 +42,6 @@ namespace CascadePass.Glazier.UI
         }
 
         #endregion
-
-        private void UpdateBinding(BindingExpression binding)
-        {
-            if (binding?.Target is DependencyObject target)
-            {
-                var dispatcher = Dispatcher;
-                if (dispatcher != null && !dispatcher.CheckAccess())
-                {
-                    dispatcher.Invoke(() => binding.UpdateTarget());
-                }
-                else
-                {
-                    binding.UpdateTarget();
-                }
-            }
-        }
 
         private static void OnAllowPreviewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -101,7 +65,7 @@ namespace CascadePass.Glazier.UI
         {
             if (string.Equals(e.PropertyName, nameof(GlazierViewModel.PreviewImage)))
             {
-                this.UpdateBinding(BindingOperations.GetBindingExpression(this.PreviewImage, Image.SourceProperty));
+                BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.PreviewImage, Image.SourceProperty));
             }
         }
     }

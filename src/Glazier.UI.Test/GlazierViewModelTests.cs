@@ -1,9 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CascadePass.Glazier.UI.Tests
@@ -25,13 +21,6 @@ namespace CascadePass.Glazier.UI.Tests
         {
             var viewModel = new GlazierViewModel();
             Assert.IsNotNull(viewModel.ImageColors, "ImageColors should not be null");
-        }
-
-        [TestMethod]
-        public void Constructor_Sizes_NotNull()
-        {
-            var viewModel = new GlazierViewModel();
-            Assert.IsNotNull(viewModel.Sizes, "Sizes should not be null");
         }
 
         [TestMethod]

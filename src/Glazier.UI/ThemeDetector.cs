@@ -1,7 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace CascadePass.Glazier.UI
 {
@@ -74,55 +71,6 @@ namespace CascadePass.Glazier.UI
             }
 
             return "Dark.xaml";
-        }
-    }
-
-    public class ThemeListener : IThemeListener
-    {
-        public event EventHandler ThemeChanged;
-
-        public ThemeListener()
-        {
-            this.ThemeDetector = new ThemeDetector();
-            SystemEvents.UserPreferenceChanged += this.OnUserPreferenceChanged;
-
-            this.ApplyTheme();
-        }
-
-        protected IThemeDetector ThemeDetector { get; set; }
-
-        internal void ApplyTheme()
-        {
-            if (Application.Current is null)
-            {
-                return;
-            }
-
-            Application.Current.Resources.MergedDictionaries.Clear();
-
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary
-            {
-                Source = new Uri($"Themes/{this.ThemeDetector.GetThemeName()}", UriKind.Relative)
-            });
-
-
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary
-            {
-                Source = new Uri($"Themes/Universal.xaml", UriKind.Relative)
-            });
-        }
-
-        private void OnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
-        {
-            if (e.Category == UserPreferenceCategory.General)
-            {
-                this.OnThemeChanged(sender, e);
-            }
-        }
-
-        protected void OnThemeChanged(object sender, EventArgs e)
-        {
-            Task.Delay(100).ContinueWith(_ => this.ApplyTheme());
         }
     }
 }

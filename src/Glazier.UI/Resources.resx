@@ -129,8 +129,23 @@
   <data name="B" xml:space="preserve">
     <value>B</value>
   </data>
+  <data name="BehindImageBrush" xml:space="preserve">
+    <value>Behind Image Effect</value>
+  </data>
   <data name="Blue" xml:space="preserve">
     <value>Blue</value>
+  </data>
+  <data name="Brush_Crosshatch" xml:space="preserve">
+    <value>Crosshatch</value>
+  </data>
+  <data name="Brush_TranslucentBlack" xml:space="preserve">
+    <value>Dark Translucent Black</value>
+  </data>
+  <data name="Font" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="FontSize" xml:space="preserve">
+    <value>Sizing</value>
   </data>
   <data name="G" xml:space="preserve">
     <value>G</value>
@@ -140,6 +155,12 @@
   </data>
   <data name="Green" xml:space="preserve">
     <value>Green</value>
+  </data>
+  <data name="Header_ModelSettings" xml:space="preserve">
+    <value>Model Settings</value>
+  </data>
+  <data name="Header_VisualSettings" xml:space="preserve">
+    <value>Visual Settings</value>
   </data>
   <data name="Hex" xml:space="preserve">
     <value>Hex</value>
@@ -152,6 +173,9 @@
   </data>
   <data name="Label_Files" xml:space="preserve">
     <value>Files</value>
+  </data>
+  <data name="Label_ModelFile" xml:space="preserve">
+    <value>ONNX Model File</value>
   </data>
   <data name="Label_OutputSize" xml:space="preserve">
     <value>Size:</value>
@@ -176,6 +200,24 @@
   </data>
   <data name="Red" xml:space="preserve">
     <value>Red</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Theme_Dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="Theme_HighContrast" xml:space="preserve">
+    <value>High Contrast</value>
+  </data>
+  <data name="Theme_Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="Theme_None" xml:space="preserve">
+    <value>Follow Windows setting</value>
   </data>
   <data name="x" xml:space="preserve">
     <value>x</value>

@@ -37,7 +37,6 @@ namespace CascadePass.Glazier.UI
         private BitmapImage image, previewImage;
         private Color replacementColor;
         private ObservableCollection<NamedColor> commonImageColors;
-        private ObservableCollection<SizeViewModel> imageOutputSizes;
         private SizeViewModel outputSize;
 
         private GlazeMethod glazeMethod;
@@ -45,8 +44,6 @@ namespace CascadePass.Glazier.UI
         private OnyxBackgroundRemover onyx;
 
         private IFileDialogProvider dialogProvider;
-
-        private object threadKey;
 
         private DelegateCommand browseForImageFile, saveImageData, viewLargePreviewCommand, viewMaskCommand;
 
@@ -64,34 +61,19 @@ namespace CascadePass.Glazier.UI
             this.ImageColors = [];
             this.colorSimilarity = 30;
 
-            this.Sizes = [];
             this.FileDialogProvider = new FileDialogProvider();
-
-            this.threadKey = new();
 
             this.GlazeMethod = GlazeMethod.Onyx_MachineLearning;
 
             this.debounceTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
             this.debounceTimer.Tick += this.ApplyDebouncedThreshold;
-
-            BindingOperations.EnableCollectionSynchronization(this.imageOutputSizes, this.threadKey);
-
-
-
-            //TODO: Read from config file
-            this.Sizes.Add(new(new(16, 16)));
-            this.Sizes.Add(new(new(32, 32)));
-            this.Sizes.Add(new(new(64, 64)));
-            this.Sizes.Add(new(new(128, 128)));
-            this.Sizes.Add(new(new(256, 256)));
-
-            //TODO: Read model location from config file?
-            this.LoadOnyxModel();
         }
 
         #endregion
 
         #region Properties
+
+        public Settings Settings { get; set; }
 
         public string SourceFilename
         {
@@ -126,7 +108,7 @@ namespace CascadePass.Glazier.UI
         public BitmapImage ImageData
         {
             get => this.image;
-            set => this.SetPropertyValue(ref this.image, value, [nameof(this.ImageData), nameof(this.IsImageLoaded), nameof(this.IsImageNeeded), nameof(this.Sizes)]);
+            set => this.SetPropertyValue(ref this.image, value, [nameof(this.ImageData), nameof(this.IsImageLoaded), nameof(this.IsImageNeeded)]);
         }
 
         public BitmapImage PreviewImage
@@ -187,12 +169,6 @@ namespace CascadePass.Glazier.UI
         }
 
         public IEnumerable<GlazeMethodViewModel> GlazeMethods => GlazeMethodViewModel.GetMethods();
-
-        public ObservableCollection<SizeViewModel> Sizes
-        {
-            get => this.imageOutputSizes;
-            set => this.SetPropertyValue(ref this.imageOutputSizes, value, nameof(this.Sizes));
-        }
 
         public SizeViewModel SelectedSize
         {
@@ -319,14 +295,27 @@ namespace CascadePass.Glazier.UI
             }
         }
 
-        internal void LoadOnyxModel()
+        public void LoadOnyxModel(string filename)
         {
+            ArgumentNullException.ThrowIfNull(filename, nameof(filename));
+
+            if (string.IsNullOrWhiteSpace(filename))
+            {
+                throw new ArgumentException("Model file path cannot be null or empty.", nameof(filename));
+            }
+
+            if(!File.Exists(filename))
+            {
+                throw new FileNotFoundException("Model file not found.", filename);
+            }
+
             try
             {                
-                this.onyx = new(@"C:\dev\u2net.onnx");
+                this.onyx = new(filename);
             }
             catch (Exception)
             {
+                this.onyx = null;
             }
         }
 
@@ -340,12 +329,12 @@ namespace CascadePass.Glazier.UI
             if (this.ImageData is not null)
             {
                 Size imageSize = new(this.ImageData.PixelWidth, this.ImageData.PixelHeight);
-                SizeViewModel existingSize = this.Sizes.FirstOrDefault(s => s.Size == imageSize);
+                //SizeViewModel existingSize = this.Sizes.FirstOrDefault(s => s.Size == imageSize);
 
-                if (existingSize != null)
-                {
-                    this.Sizes.Remove(existingSize);
-                }
+                //if (existingSize != null)
+                //{
+                //    this.Sizes.Remove(existingSize);
+                //}
             }
 
             var bitmap = new BitmapImage();
@@ -368,6 +357,7 @@ namespace CascadePass.Glazier.UI
 
             this.ImageData = bitmap;
             this.ImageGlazier.LoadImage(this.SourceFilename);
+
             this.onyx.LoadSourceImage(this.SourceFilename, new());
 
             var color = this.ImageGlazier.GetMostCommonColors(1);
@@ -389,18 +379,18 @@ namespace CascadePass.Glazier.UI
             if (this.ImageData is not null)
             {
                 Size imageSize = new(this.ImageData.PixelWidth, this.ImageData.PixelHeight);
-                SizeViewModel existingSize = this.Sizes.FirstOrDefault(s => s.Size == imageSize);
+                //SizeViewModel existingSize = this.Sizes.FirstOrDefault(s => s.Size == imageSize);
 
-                if (existingSize != null)
-                {
-                    this.SelectedSize = existingSize;
-                }
-                else
-                {
-                    SizeViewModel imageSizeVM = new(imageSize);
-                    this.Sizes.Add(imageSizeVM);
-                    this.SelectedSize = imageSizeVM;
-                }
+                //if (existingSize != null)
+                //{
+                //    this.SelectedSize = existingSize;
+                //}
+                //else
+                //{
+                //    SizeViewModel imageSizeVM = new(imageSize);
+                //    this.Sizes.Add(imageSizeVM);
+                //    this.SelectedSize = imageSizeVM;
+                //}
             }
         }
 

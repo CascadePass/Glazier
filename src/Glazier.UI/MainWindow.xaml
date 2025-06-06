@@ -6,28 +6,32 @@
         xmlns:local="clr-namespace:CascadePass.Glazier.UI"
         mc:Ignorable="d"
         Height="450" Width="800"
+        FontSize="{Binding Settings.FontSize}"
+        FontFamily="{Binding Settings.FontFamily}"
         Title="{x:Static local:Resources.Glazier}"
         Icon="/Images/GlazierIcon.png"
         AllowDrop="True" DragEnter="Window_DragEnter" DragLeave="Window_DragLeave" Drop="Window_Drop"
-        Background="{StaticResource MainWindowBackgroundBrush}">
+        Background="{DynamicResource MainWindowBackgroundBrush}">
     <Window.DataContext>
-        <local:GlazierViewModel />
+        <local:WorkspaceViewModel />
     </Window.DataContext>
 
-    <DockPanel LastChildFill="True">
-        <Border
-            x:Name="InputFormBorder"
-            DockPanel.Dock="Top"
-            Style="{StaticResource OuterBorderStyle}">
-            <StackPanel>
-                <TextBlock
+    <Grid>
+        <DockPanel LastChildFill="True">
+            <Border
+                x:Name="InputFormBorder"
+                DockPanel.Dock="Top"
+                DataContext="{Binding GlazierViewModel}"
+                Style="{DynamicResource OuterBorderStyle}">
+                <StackPanel>
+                    <TextBlock
                     x:Name="InputFileLabel"
                     Text="{x:Static local:Resources.Label_SourceFile}"
                     Visibility="{Binding IsImageNeeded, Converter={StaticResource boolToVisibility}}"
-                    Style="{StaticResource FormLabel}"
+                    Style="{DynamicResource FormLabel}"
                     />
 
-                <local:CommandTextBox
+                    <local:CommandTextBox
                     x:Name="InputFile"
                     InsetText="{x:Static local:Resources.Label_SourceFile}"
                     InsetIcon="/Images/Icons/FolderOpenBlue.png"
@@ -39,90 +43,52 @@
                     />
 
 
-                <TextBlock
+                    <TextBlock
                     x:Name="AlgorithmLabel"
                     Text="{x:Static local:Resources.Algorithm}"
                     Visibility="{Binding IsImageNeeded, Converter={StaticResource boolToVisibility}}"
-                    Style="{StaticResource FormLabel}"
+                    Style="{DynamicResource FormLabel}"
                     />
 
-                <ComboBox
+                    <ComboBox
                     Margin="0,4,0,4"
                     ItemsSource="{Binding GlazeMethods}"
                     SelectedValue="{Binding GlazeMethod, Mode=TwoWay}"
                     SelectedValuePath="Method"
                     >
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="{Binding IconPath}" Width="20" Height="20" />
-                                <TextBlock Text="{Binding Name}" Margin="5,0,0,0" />
-                                <TextBlock Text="{Binding Description}" Margin="5,0,0,0" FontStyle="Italic" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="{Binding IconPath}" Width="20" Height="20" />
+                                    <TextBlock Text="{Binding Name}" Margin="5,0,0,0" />
+                                    <TextBlock Text="{Binding Description}" Margin="5,0,0,0" FontStyle="Italic" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+            </Border>
 
+            <Slider
+                x:Name="ColorTolerance"
+                DockPanel.Dock="Bottom"
+                DataContext="{Binding GlazierViewModel}"
+                Minimum="0"
+                Maximum="255"
+                Margin="-3,0,0,0"
+                Value="{Binding ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="{Binding ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
+                Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}"
+                >
+            </Slider>
 
-                <TextBlock
-                    x:Name="ColorLabel"
-                    Text="{x:Static local:Resources.Label_ReplacementColor}"
-                    Style="{StaticResource FormLabel}"
-                    Visibility="{Binding IsColorNeeded, Converter={StaticResource boolToVisibility}}"
-                    />
+            <local:ImageDisplayView
+                WorkspaceViewModel="{Binding .}" />
+        </DockPanel>
 
-                <local:ColorPicker
-                    x:Name="ColorPicker"
-                    SelectedColor="{Binding ReplacementColor}"
-                    SuggestedColors="{Binding ImageColors}"
-                    Background="{Binding ReplacementColor, Converter={StaticResource colorToBrush}}"
-                    Visibility="{Binding IsColorNeeded, Converter={StaticResource boolToVisibility}}"
-                    />
-            </StackPanel>
-        </Border>
-
-        <Slider
-            x:Name="ColorTolerance"
-            DockPanel.Dock="Bottom"
-            Minimum="0"
-            Maximum="255"
-            Margin="-3,0,0,0"
-            Value="{Binding ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
-            ToolTip="{Binding ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
-            >
-        </Slider>
-
-        <Border x:Name="ImagePreviewSection" Style="{StaticResource ImagesBorderStyle}" Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="3" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-
-                <Image
-                    x:Name="DisplayImage"
-                    Grid.Column="0"
-                    Source="{Binding ImageData}"
-                    Stretch="Uniform"
-                    Cursor="Cross"
-                    VerticalAlignment="Center"
-                    MouseDown="DisplayImage_MouseDown"
-                    />
-
-                <GridSplitter
-                    Grid.Column="1"
-                    Width="3"
-                    VerticalAlignment="Stretch"
-                    HorizontalAlignment="Stretch"
-                    ShowsPreview="True" />
-
-                <local:ImageEditor
-                    x:Name="PreviewImage"
-                    Grid.Column="2"
-                    GlazierViewModel="{Binding}" />
-                </Grid>
-        </Border>
-    </DockPanel>
-
+        <local:SettingsEditorView
+            x:Name="SettingsEditor"
+            DataContext="{Binding SettingsViewModel}"
+            Visibility="Collapsed" />
+    </Grid>
 </Window>

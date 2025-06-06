@@ -10,6 +10,7 @@
     <SolidColorBrush x:Key="ToggleButtonSelectedMouseOverBrush" Color="Red"/>
     <SolidColorBrush x:Key="ToolbarBackgroundBrush" Color="LightGray"/>
     <SolidColorBrush x:Key="ToolbarBorderBrush" Color="DarkGray"/>
+    <SolidColorBrush x:Key="MouseOverImageBorderBrush" Color="Orange"/>
 
 
     <LinearGradientBrush x:Key="SplitterBrush" StartPoint="0,0" EndPoint="1,1">

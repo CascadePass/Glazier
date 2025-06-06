@@ -3,6 +3,7 @@
 namespace CascadePass.Glazier.UI.Tests
 {
     [TestClass]
+    [DoNotParallelize]
     public class WorkspaceViewModelTests
     {
         [TestMethod]

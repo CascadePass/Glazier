@@ -9,7 +9,7 @@ namespace CascadePass.Glazier.UI.Tests
         [TestMethod]
         public void Constructor_ObjectsAreNotNull()
         {
-            WorkspaceViewModel workspaceViewModel = new();
+            WorkspaceViewModel workspaceViewModel = new(new());
 
             Assert.IsNotNull(workspaceViewModel.GlazierViewModel, "GlazierViewModel should not be null after construction.");
             Assert.IsNotNull(workspaceViewModel.Settings, "Settings should not be null after construction.");
@@ -23,7 +23,7 @@ namespace CascadePass.Glazier.UI.Tests
         [TestMethod]
         public void GetSettings_ReturnsCachedSettings()
         {
-            Settings testSettings = new();
+            Settings testSettings = new(new());
             WorkspaceViewModel viewModel = new() { Settings = testSettings };
 
             Assert.AreSame(testSettings, viewModel.GetSettings(), "GetSettings should return the cached settings instance.");
@@ -32,7 +32,7 @@ namespace CascadePass.Glazier.UI.Tests
         [TestMethod]
         public void ChangingImageColumnWidth_ShouldUpdateVisibility()
         {
-            var viewModel = new WorkspaceViewModel();
+            var viewModel = new WorkspaceViewModel(new());
 
             viewModel.OriginalImageColumnWidth = new GridLength(10);
 

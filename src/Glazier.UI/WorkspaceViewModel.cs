@@ -49,6 +49,38 @@ namespace CascadePass.Glazier.UI
             }
         }
 
+        public WorkspaceViewModel(Settings settings)
+        {
+            this.Settings = settings;
+
+            this.themeListener = new ThemeListener();
+            this.themeListener.ApplyTheme(this.settings.Theme);
+
+            this.originalImageColumnWidth = new GridLength(1, GridUnitType.Star);
+
+            this.glazierViewModel = new GlazierViewModel() { Settings = this.settings };
+
+            if (!string.IsNullOrWhiteSpace(this.Settings.ModelFile) && File.Exists(this.Settings.ModelFile))
+            {
+                this.glazierViewModel.LoadOnyxModel(this.Settings.ModelFile);
+            }
+        }
+
+        public WorkspaceViewModel(Settings settings, IThemeListener themeListener)
+        {
+            this.Settings = settings;
+            this.themeListener = themeListener;
+
+            this.originalImageColumnWidth = new GridLength(1, GridUnitType.Star);
+
+            this.glazierViewModel = new GlazierViewModel() { Settings = this.settings };
+
+            if (!string.IsNullOrWhiteSpace(this.Settings.ModelFile) && File.Exists(this.Settings.ModelFile))
+            {
+                this.glazierViewModel.LoadOnyxModel(this.Settings.ModelFile);
+            }
+        }
+
 
         #region Properties
 

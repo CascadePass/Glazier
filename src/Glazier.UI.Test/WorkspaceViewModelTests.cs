@@ -3,7 +3,6 @@
 namespace CascadePass.Glazier.UI.Tests
 {
     [TestClass]
-    [DoNotParallelize]
     public class WorkspaceViewModelTests
     {
         [TestMethod]
@@ -37,6 +36,10 @@ namespace CascadePass.Glazier.UI.Tests
             viewModel.OriginalImageColumnWidth = new GridLength(10);
 
             Assert.IsTrue(viewModel.IsSettingsPageVisible);
+
+            viewModel.OriginalImageColumnWidth = new GridLength(0);
+
+            Assert.IsFalse(viewModel.IsSettingsPageVisible);
         }
 
     }

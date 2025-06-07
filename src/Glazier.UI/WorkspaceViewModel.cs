@@ -22,6 +22,8 @@ namespace CascadePass.Glazier.UI
 
         #endregion
 
+        #region Constructors
+
         public WorkspaceViewModel()
         {
             this.Settings = this.GetSettings();
@@ -34,19 +36,7 @@ namespace CascadePass.Glazier.UI
 
             this.glazierViewModel = new GlazierViewModel() { Settings = this.settings };
 
-            if (!string.IsNullOrWhiteSpace(this.Settings.ModelFile) && File.Exists(this.Settings.ModelFile))
-            {
-                this.glazierViewModel.LoadOnyxModel(this.Settings.ModelFile);
-            }
-            else
-            {
-                MessageBox.Show(
-                    $"Can't load configured model '{this.Settings?.ModelFile}'",
-                    "No Onxy Model",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning
-                    );
-            }
+            this.LoadOnyxModel(this.Settings.ModelFile);
         }
 
         public WorkspaceViewModel(Settings settings)
@@ -61,27 +51,23 @@ namespace CascadePass.Glazier.UI
 
             this.glazierViewModel = new GlazierViewModel() { Settings = this.settings };
 
-            if (!string.IsNullOrWhiteSpace(this.Settings.ModelFile) && File.Exists(this.Settings.ModelFile))
-            {
-                this.glazierViewModel.LoadOnyxModel(this.Settings.ModelFile);
-            }
+            this.LoadOnyxModel(this.Settings.ModelFile);
         }
 
         public WorkspaceViewModel(Settings settings, IThemeListener themeListener)
         {
             this.Settings = settings;
             this.themeListener = themeListener;
+            this.themeListener.ApplyTheme(this.settings.Theme);
 
             this.originalImageColumnWidth = new GridLength(1, GridUnitType.Star);
 
             this.glazierViewModel = new GlazierViewModel() { Settings = this.settings };
 
-            if (!string.IsNullOrWhiteSpace(this.Settings.ModelFile) && File.Exists(this.Settings.ModelFile))
-            {
-                this.glazierViewModel.LoadOnyxModel(this.Settings.ModelFile);
-            }
+            this.LoadOnyxModel(this.Settings.ModelFile);
         }
 
+        #endregion
 
         #region Properties
 
@@ -212,6 +198,25 @@ namespace CascadePass.Glazier.UI
             return this.settings;
         }
 
+        internal void LoadOnyxModel(string modelFile)
+        {
+            if (!string.IsNullOrWhiteSpace(modelFile) && File.Exists(modelFile))
+            {
+                this.glazierViewModel.LoadOnyxModel(modelFile);
+            }
+            else
+            {
+#if RELEASE
+                MessageBox.Show(
+                    $"Can't load configured model '{modelFile}'",
+                    "No Onyx Model",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning
+                );
+#endif
+            }
+        }
+
         #region Event Handlers
 
         private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -253,6 +258,6 @@ namespace CascadePass.Glazier.UI
 
         #endregion
 
-        #endregion
+#endregion
     }
 }

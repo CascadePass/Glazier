@@ -24,7 +24,7 @@ namespace CascadePass.Glazier.UI.Tests
         public void GetSettings_ReturnsCachedSettings()
         {
             Settings testSettings = new();
-            WorkspaceViewModel viewModel = new() { Settings = testSettings };
+            WorkspaceViewModel viewModel = new(testSettings);
 
             Assert.AreSame(testSettings, viewModel.GetSettings(), "GetSettings should return the cached settings instance.");
         }

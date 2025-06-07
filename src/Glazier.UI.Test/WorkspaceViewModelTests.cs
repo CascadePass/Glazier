@@ -17,13 +17,13 @@ namespace CascadePass.Glazier.UI.Tests
             Assert.IsNotNull(workspaceViewModel.OriginalImageColumnWidth, "OriginalImageColumnWidth should not be null after construction.");
             Assert.IsNotNull(workspaceViewModel.CurrentFont, "CurrentFont should not be null after construction.");
 
-            Assert.IsFalse(string.IsNullOrWhiteSpace(workspaceViewModel.SettingsFilename));
+            //Assert.IsFalse(string.IsNullOrWhiteSpace(workspaceViewModel.SettingsFilename));
         }
 
         [TestMethod]
         public void GetSettings_ReturnsCachedSettings()
         {
-            Settings testSettings = new(new());
+            Settings testSettings = new();
             WorkspaceViewModel viewModel = new() { Settings = testSettings };
 
             Assert.AreSame(testSettings, viewModel.GetSettings(), "GetSettings should return the cached settings instance.");

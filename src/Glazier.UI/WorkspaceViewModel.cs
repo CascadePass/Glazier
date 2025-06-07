@@ -52,6 +52,7 @@ namespace CascadePass.Glazier.UI
         public WorkspaceViewModel(Settings settings)
         {
             this.Settings = settings;
+            this.SettingsViewModel = new(this.Settings);
 
             this.themeListener = new ThemeListener();
             this.themeListener.ApplyTheme(this.settings.Theme);

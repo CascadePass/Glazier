@@ -104,7 +104,7 @@ namespace CascadePass.Glazier.UI
 
         public SettingsViewModel SettingsViewModel
         {
-            get => this.settingsViewModel/* ??= new(this.settings)*/;
+            get => this.settingsViewModel;
             set
             {
                 var old = this.settingsViewModel;
@@ -258,6 +258,6 @@ namespace CascadePass.Glazier.UI
 
         #endregion
 
-#endregion
+        #endregion
     }
 }

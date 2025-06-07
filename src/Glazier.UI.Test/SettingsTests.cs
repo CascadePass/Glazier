@@ -177,6 +177,22 @@ namespace CascadePass.Glazier.UI.Tests
         }
 
         [TestMethod]
+        public void ValidateModelFilename_ShouldReturnTrueForExistingFile()
+        {
+            var settingsValidator = new Settings();
+            string existingFile = @"C:\\Windows\\notepad.exe";
+            Assert.AreEqual(existingFile, settingsValidator.ValidateModelFilename(existingFile));
+        }
+
+        [TestMethod]
+        public void ValidateModelFilename_ShouldReturnFalseForNonExistentFile()
+        {
+            var settingsValidator = new Settings();
+            string existingFile = @$"C:\\Windows\\{Guid.NewGuid()}.exe";
+            Assert.IsNull(settingsValidator.ValidateModelFilename(existingFile));
+        }
+
+        [TestMethod]
         public void ValidateSizeOptions_ShouldReturnListWhenNullIsSupplied()
         {
             var settingsValidator = new Settings();

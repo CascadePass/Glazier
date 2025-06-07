@@ -9,6 +9,11 @@
             return this.SelectedFilePath;
         }
 
+        public string BrowseToOpenOnyxModelFile()
+        {
+            return this.SelectedFilePath;
+        }
+
         public string BrowseToSaveImageFile()
         {
             return this.SelectedFilePath;

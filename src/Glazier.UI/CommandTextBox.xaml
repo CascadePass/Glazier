@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <Border Style="{StaticResource CommandTextBoxBorder}">
+    <Border Style="{DynamicResource CommandTextBoxBorder}">
         <DockPanel LastChildFill="True">
             <Button
                 x:Name="SearchButton"
@@ -16,14 +16,14 @@
                 BorderBrush="Transparent"
                 Background="Transparent"
                 >
-                <Image Source="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=CommandIcon, Mode=OneWay}" Style="{StaticResource Icon}" />
+                <Image Source="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=CommandIcon, Mode=OneWay}" Style="{DynamicResource Icon}" />
             </Button>
 
             <Grid>
-                <TextBlock x:Name="InsetLabel" Style="{StaticResource CommandTextBoxInsetLabelStyle}">                    
+                <TextBlock x:Name="InsetLabel" Style="{DynamicResource CommandTextBoxInsetLabelStyle}">                    
                     <Image
                         Source="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=InsetIcon, Mode=OneWay}"
-                        Style="{StaticResource Icon}"
+                        Style="{DynamicResource Icon}"
                         />
 
                     <Run
@@ -34,7 +34,7 @@
                 <TextBox
                     x:Name="SearchBox"
                     Text="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=UserText, Mode=TwoWay}"
-                    Style="{StaticResource CommandTextBoxStyle}">
+                    Style="{DynamicResource CommandTextBoxStyle}">
                 </TextBox>
             </Grid>
         </DockPanel>

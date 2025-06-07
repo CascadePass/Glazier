@@ -10,7 +10,7 @@
     <Border
         x:Name="ToolbarBorder"
         Loaded="ToolbarBorder_Loaded"
-        Style="{StaticResource AnimatedVisibilityToolbarStyle}">
+        Style="{DynamicResource AnimatedVisibilityToolbarStyle}">
 
         <StackPanel Orientation="Horizontal">
             <Button Background="Transparent" BorderBrush="Transparent" Command="{Binding SaveImageFileCommand, Mode=OneTime}">
@@ -95,7 +95,10 @@
                 PlacementTarget="{Binding ElementName=OutputSizeToggleButton}">
 
                 <Border Background="LightGray">
-                    <ListBox ItemsSource="{Binding Sizes}" SelectedItem="{Binding SelectedSize}" BorderThickness="0" SelectionChanged="ListBox_SelectionChanged">
+                    <ListBox
+                        ItemsSource="{Binding WorkspaceViewModel.SettingsViewModel.AvailableSizes, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
+                        SelectedItem="{Binding SelectedSize}"
+                        BorderThickness="0">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -121,6 +124,12 @@
                 MinWidth="100"
                 Visibility="{Binding IsUsingColorReplacement, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource boolToVisibility}}"
                 />
+
+            <Border Width="1" Background="Gray" Margin="5,2" />
+
+            <Button Background="Transparent" BorderBrush="Transparent" Click="SettingsButton_Click">
+                <Image Source="/Images/Icons/Settings.png"  Width="20" Height="20" />
+            </Button>
         </StackPanel>
     </Border>
 </UserControl>

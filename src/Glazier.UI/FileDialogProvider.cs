@@ -43,5 +43,23 @@ namespace CascadePass.Glazier.UI
 
             return null;
         }
+
+        public string BrowseToOpenOnyxModelFile()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Title = "Select Onyx Model File",
+                Filter = "Onyx Model Files (*.onnx)|*.onnx|All Files (*.*)|*.*",
+                Multiselect = false
+            };
+
+            var result = openFileDialog.ShowDialog();
+            if (result.HasValue && result.Value)
+            {
+                return openFileDialog.FileName;
+            }
+
+            return null;
+        }
     }
 }

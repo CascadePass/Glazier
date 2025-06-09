@@ -15,75 +15,11 @@
     <Window.DataContext>
         <local:WorkspaceViewModel />
     </Window.DataContext>
-
+    
     <Grid>
         <DockPanel LastChildFill="True">
-            <Border
-                x:Name="InputFormBorder"
-                DockPanel.Dock="Top"
-                DataContext="{Binding GlazierViewModel}"
-                Style="{DynamicResource OuterBorderStyle}">
-                <StackPanel>
-                    <TextBlock
-                    x:Name="InputFileLabel"
-                    Text="{x:Static local:Resources.Label_SourceFile}"
-                    Visibility="{Binding IsImageNeeded, Converter={StaticResource boolToVisibility}}"
-                    Style="{DynamicResource FormLabel}"
-                    />
-
-                    <local:CommandTextBox
-                    x:Name="InputFile"
-                    InsetText="{x:Static local:Resources.Label_SourceFile}"
-                    InsetIcon="/Images/Icons/FolderOpenBlue.png"
-                    CommandIcon="/Images/Icons/FolderOpened.png"
-                    Command="{Binding BrowseForImageFileCommand}"
-                    Opacity=".7"
-                    UserText="{Binding SourceFilename}"
-                    Visibility="{Binding IsImageNeeded, Converter={StaticResource boolToVisibility}}"
-                    />
-
-
-                    <TextBlock
-                    x:Name="AlgorithmLabel"
-                    Text="{x:Static local:Resources.Algorithm}"
-                    Visibility="{Binding IsImageNeeded, Converter={StaticResource boolToVisibility}}"
-                    Style="{DynamicResource FormLabel}"
-                    />
-
-                    <ComboBox
-                    Margin="0,4,0,4"
-                    ItemsSource="{Binding GlazeMethods}"
-                    SelectedValue="{Binding GlazeMethod, Mode=TwoWay}"
-                    SelectedValuePath="Method"
-                    >
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="{Binding IconPath}" Width="20" Height="20" />
-                                    <TextBlock Text="{Binding Name}" Margin="5,0,0,0" />
-                                    <TextBlock Text="{Binding Description}" Margin="5,0,0,0" FontStyle="Italic" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </StackPanel>
-            </Border>
-
-            <Slider
-                x:Name="ColorTolerance"
-                DockPanel.Dock="Bottom"
-                DataContext="{Binding GlazierViewModel}"
-                Minimum="0"
-                Maximum="255"
-                Margin="-3,0,0,0"
-                Value="{Binding ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
-                ToolTip="{Binding ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
-                Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}"
-                >
-            </Slider>
-
-            <local:ImageDisplayView
-                WorkspaceViewModel="{Binding .}" />
+            <local:LoadImageForm x:Name="LoadForm" DockPanel.Dock="Top" />
+            <local:ImageDisplayView WorkspaceViewModel="{Binding .}" />
         </DockPanel>
 
         <local:SettingsEditorView

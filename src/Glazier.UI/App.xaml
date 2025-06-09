@@ -9,6 +9,7 @@
             <BooleanToVisibilityConverter x:Key="boolToVisibility" />
             <local:ColorToBrushConverter x:Key="colorToBrush" />
             <local:GlazeMethodToBoolConverter x:Key="glazeMethodToBool" />
+            <local:StringToVisibilityConverter x:Key="nullOrWhitespaceToVisibility" />
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Themes/Dark.xaml" />

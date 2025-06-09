@@ -47,7 +47,7 @@ namespace CascadePass.Glazier.UI
                 {
                     if(this.DataContext is WorkspaceViewModel vm)
                     {
-                        vm.GlazierViewModel.SourceFilename = file;
+                        vm.SourceFilename = file;
                     }
                 }
             }
@@ -118,23 +118,24 @@ namespace CascadePass.Glazier.UI
             {
                 this.FontFamily = this.WorkspaceViewModel.CurrentFont;
             }
+            else if (e.PropertyName == nameof(WorkspaceViewModel.IsImageNeeded))
+            {
+                //BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorTolerance, Slider.VisibilityProperty));
+
+                this.LoadForm.Hide();
+            }
         }
 
         private void GlazierViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(GlazierViewModel.SourceFilename))
-            {
-                //BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.InputFile, CommandTextBox.UserTextProperty));
-            }
-            else if (e.PropertyName == nameof(GlazierViewModel.ReplacementColor))
-            {
-            }
-            else if (e.PropertyName == nameof(GlazierViewModel.IsImageNeeded))
-            {
-                //BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.ColorTolerance, Slider.VisibilityProperty));
-
-                Animator.HideInputForm(this.InputFormBorder);
-            }
+            //if (e.PropertyName == nameof(WorkspaceViewModel.SourceFilename))
+            //{
+            //    //BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.InputFile, CommandTextBox.UserTextProperty));
+            //}
+            //else if (e.PropertyName == nameof(GlazierViewModel.ReplacementColor))
+            //{
+            //}
+            //else 
         }
     }
 }

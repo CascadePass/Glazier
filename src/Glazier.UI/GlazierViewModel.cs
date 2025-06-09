@@ -1,7 +1,6 @@
 ﻿#region Using directives
 
 using CascadePass.Glazier.Core;
-using Microsoft.Win32;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
@@ -13,14 +12,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-
-using Bitmap = System.Drawing.Bitmap;
 using Size = System.Windows.Size;
 
 #endregion
@@ -31,9 +26,7 @@ namespace CascadePass.Glazier.UI
     {
         #region Fields
 
-        public bool isViewingMask;
         private int colorSimilarity;
-        private string sourceFilename;
         private BitmapImage image, previewImage;
         private Color replacementColor;
         private ObservableCollection<NamedColor> commonImageColors;
@@ -42,10 +35,6 @@ namespace CascadePass.Glazier.UI
         private GlazeMethod glazeMethod;
         private ImageGlazier imageGlazier;
         private OnyxBackgroundRemover onyx;
-
-        private IFileDialogProvider dialogProvider;
-
-        private DelegateCommand browseForImageFile, saveImageData, viewLargePreviewCommand, viewMaskCommand;
 
         private CancellationTokenSource mlProcessingCancellationToken;
         private readonly DispatcherTimer debounceTimer;
@@ -61,8 +50,6 @@ namespace CascadePass.Glazier.UI
             this.ImageColors = [];
             this.colorSimilarity = 30;
 
-            this.FileDialogProvider = new FileDialogProvider();
-
             this.GlazeMethod = GlazeMethod.Onyx_MachineLearning;
 
             this.debounceTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
@@ -74,20 +61,6 @@ namespace CascadePass.Glazier.UI
         #region Properties
 
         public Settings Settings { get; set; }
-
-        public string SourceFilename
-        {
-            get => this.sourceFilename;
-            set
-            {
-                bool changed = this.SetPropertyValue(ref this.sourceFilename, value, nameof(this.SourceFilename));
-
-                if (changed)
-                {
-                    this.LoadSourceImage();
-                }
-            }
-        }
 
         public int ColorSimilarityThreshold
         {
@@ -108,7 +81,7 @@ namespace CascadePass.Glazier.UI
         public BitmapImage ImageData
         {
             get => this.image;
-            set => this.SetPropertyValue(ref this.image, value, [nameof(this.ImageData), nameof(this.IsImageLoaded), nameof(this.IsImageNeeded)]);
+            set => this.SetPropertyValue(ref this.image, value, nameof(this.ImageData));
         }
 
         public BitmapImage PreviewImage
@@ -159,16 +132,14 @@ namespace CascadePass.Glazier.UI
             get => this.glazeMethod;
             set
             {
-                bool changed = this.SetPropertyValue(ref this.glazeMethod, value, [nameof(this.GlazeMethod), nameof(this.IsColorNeeded)]);
+                bool changed = this.SetPropertyValue(ref this.glazeMethod, value, nameof(this.GlazeMethod));
 
-                if (changed)
+                if (changed && this.ImageData is not null)
                 {
                     this.GeneratePreviewImage();
                 }
             }
         }
-
-        public IEnumerable<GlazeMethodViewModel> GlazeMethods => GlazeMethodViewModel.GetMethods();
 
         public SizeViewModel SelectedSize
         {
@@ -176,45 +147,11 @@ namespace CascadePass.Glazier.UI
             set => this.SetPropertyValue(ref this.outputSize, value, nameof(this.SelectedSize));
         }
 
-        public bool IsMaskVisible
-        {
-            get => this.isViewingMask;
-            set => this.SetPropertyValue(ref this.isViewingMask, value, nameof(this.IsMaskVisible));
-        }
-
-        public bool IsSourceFilenameValid => !string.IsNullOrEmpty(this.SourceFilename) && File.Exists(this.SourceFilename);
-
-        public IFileDialogProvider FileDialogProvider
-        {
-            get => this.dialogProvider;
-            set => this.SetPropertyValue(ref this.dialogProvider, value, nameof(this.FileDialogProvider));
-        }
-
-        #region Visibility
-
-        public bool IsImageLoaded => this.ImageData is not null;
-
-        public bool IsImageNeeded => this.ImageData is null;
-
-        public bool IsColorNeeded => this.GlazeMethod == GlazeMethod.Prism_ColorReplacement;
-
-        #endregion
-
-        #region Commands
-
-        public ICommand BrowseForImageFileCommand => this.browseForImageFile ??= new(this.BrowseForImageFileImplementation);
-
-        public ICommand SaveImageFileCommand => this.saveImageData ??= new(this.SaveImageImplementation);
-
-        public ICommand ViewLargePreviewCommand => this.viewLargePreviewCommand ??= new(this.ViewLargePreviewImplementation);
-
-        public ICommand ViewMaskCommand => this.viewMaskCommand ??= new(this.ViewMaskImplementation);
-
-        #endregion
-
         #endregion
 
         #region Methods
+
+        #region Preview Image
 
         internal void GeneratePreviewImage()
         {
@@ -279,8 +216,17 @@ namespace CascadePass.Glazier.UI
             Task.Delay(5000).ContinueWith(_ => mlProcessingCancellationToken.Cancel());
         }
 
+        #endregion
+
         private void GetMostCommonColors()
         {
+            if (this.ImageGlazier?.ImageData is null)
+            {
+                // The image hasn't been loaded yet, so we can't get the most common colors.
+                this.commonImageColors = [];
+                return;
+            }
+
             this.commonImageColors.Clear();
             var colors = this.ImageGlazier.GetMostCommonColors(100);
 
@@ -319,13 +265,8 @@ namespace CascadePass.Glazier.UI
             }
         }
 
-        internal void LoadSourceImage()
+        internal void LoadSourceImage(string filename)
         {
-            if (!this.IsSourceFilenameValid)
-            {
-                return;
-            }
-
             if (this.ImageData is not null)
             {
                 Size imageSize = new(this.ImageData.PixelWidth, this.ImageData.PixelHeight);
@@ -342,7 +283,7 @@ namespace CascadePass.Glazier.UI
             try
             {
                 bitmap.BeginInit();
-                bitmap.UriSource = new Uri(this.SourceFilename, UriKind.Absolute);
+                bitmap.UriSource = new Uri(filename, UriKind.Absolute);
                 bitmap.CacheOption = BitmapCacheOption.OnLoad;
                 bitmap.EndInit();
                 bitmap.Freeze();
@@ -356,24 +297,33 @@ namespace CascadePass.Glazier.UI
             }
 
             this.ImageData = bitmap;
-            this.ImageGlazier.LoadImage(this.SourceFilename);
 
-            this.onyx.LoadSourceImage(this.SourceFilename, new());
-
-            var color = this.ImageGlazier.GetMostCommonColors(1);
-
-            if (color is not null)
+            if (this.GlazeMethod == GlazeMethod.Prism_ColorReplacement)
             {
-                this.ReplacementColor = new Color()
+                this.ImageGlazier.LoadImage(filename);
+
+
+                var color = this.ImageGlazier.GetMostCommonColors(1);
+
+                if (color is not null)
                 {
-                    A = color.Keys.First().A,
-                    R = color.Keys.First().R,
-                    G = color.Keys.First().G,
-                    B = color.Keys.First().B
-                };
+                    this.ReplacementColor = new Color()
+                    {
+                        A = color.Keys.First().A,
+                        R = color.Keys.First().R,
+                        G = color.Keys.First().G,
+                        B = color.Keys.First().B
+                    };
+                }
+
+
+                this.GetMostCommonColors();
+            }
+            else
+            {
+                this.onyx.LoadSourceImage(filename, new());
             }
 
-            this.GetMostCommonColors();
             this.GeneratePreviewImage();
 
             if (this.ImageData is not null)
@@ -394,6 +344,32 @@ namespace CascadePass.Glazier.UI
             }
         }
 
+        public BitmapImage GetOnyxMask()
+        {
+            if (this.GlazeMethod != GlazeMethod.Onyx_MachineLearning)
+            {
+                return null;
+            }
+
+            if (this.onyx is not null)
+            {
+                using MemoryStream memoryStream = new();
+                this.onyx.Mask.Save(memoryStream, ImageFormat.Png);
+                memoryStream.Position = 0;
+
+                BitmapImage bitmapImage = new();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memoryStream;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                bitmapImage.Freeze();
+
+                return this.PreviewImage = bitmapImage;
+            }
+
+            return null;
+        }
+
         private void ApplyDebouncedThreshold(object sender, EventArgs e)
         {
             this.debounceTimer.Stop();
@@ -412,6 +388,8 @@ namespace CascadePass.Glazier.UI
 
             this.mlProcessingCancellationToken = new CancellationTokenSource();
         }
+
+        #region Save
 
         internal async void SaveIconFile(string filename)
         {
@@ -481,105 +459,6 @@ namespace CascadePass.Glazier.UI
 
             // Cancel the operation after 15 seconds
             Task.Delay(15000).ContinueWith(_ => mlProcessingCancellationToken.Cancel());
-        }
-
-        #region Command Implementations
-
-        internal void BrowseForImageFileImplementation()
-        {
-            var filename = this.FileDialogProvider.BrowseToOpenImageFile();
-
-            if (!string.IsNullOrWhiteSpace(filename))
-            {
-                this.SourceFilename = filename;
-            }
-        }
-
-        internal void SaveImageImplementation()
-        {
-            var filename = this.FileDialogProvider.BrowseToSaveImageFile();
-
-            if (!string.IsNullOrWhiteSpace(filename))
-            {
-                if (filename.ToLower().EndsWith(".ico"))
-                {
-                    this.SaveIconFile(filename);
-                    return;
-                }
-
-                if (this.GlazeMethod == GlazeMethod.Prism_ColorReplacement)
-                {
-                    this.SaveColorReplacementImage(filename);
-                }
-                else if (this.GlazeMethod == GlazeMethod.Onyx_MachineLearning)
-                {
-                    this.SaveOnyxImage(filename);
-                }
-
-                try
-                {
-                    Process.Start("explorer.exe", string.Format("/select,\"{0}\"", filename));
-                }
-                catch (Exception)
-                {
-                }
-            }
-        }
-
-        internal void ViewMaskImplementation()
-        {
-            if (this.IsMaskVisible)
-            {
-                if (this.GlazeMethod == GlazeMethod.Onyx_MachineLearning && this.onyx is not null)
-                {
-                    using MemoryStream memoryStream = new();
-                    this.onyx.Mask.Save(memoryStream, ImageFormat.Png);
-                    memoryStream.Position = 0;
-
-                    BitmapImage bitmapImage = new();
-                    bitmapImage.BeginInit();
-                    bitmapImage.StreamSource = memoryStream;
-                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmapImage.EndInit();
-                    bitmapImage.Freeze();
-
-                    this.PreviewImage = bitmapImage;
-                }
-                else if(this.GlazeMethod == GlazeMethod.Prism_ColorReplacement && this.ImageGlazier?.ImageData is not null)
-                {
-                    var mask = this.ImageGlazier.Mask ?? this.ImageGlazier.GenerateMask(ColorBridge.GetRgba32FromColor(this.ReplacementColor), this.ColorSimilarityThreshold);;
-
-                    this.PreviewImage = ImageFormatBridge.ToBitmapImage(mask);
-                }
-            }
-            else
-            {
-                // User may have edited the mask.
-                this.GeneratePreviewImage();
-            }
-        }
-
-        internal void ViewLargePreviewImplementation()
-        {
-            var backgroundBrush = Application.Current?.Resources?["CrosshatchBrush"] as Brush;
-
-            ImageEditor imageEditor = new()
-            {
-                GlazierViewModel = this,
-                Background = backgroundBrush,
-                AllowPreview = false,
-            };
-
-            Window previewWindow = new()
-            {
-                Title = "Preview Image",
-                Content = imageEditor,
-                WindowState = WindowState.Maximized,
-                Background = backgroundBrush,
-                DataContext = this,
-            };
-
-            previewWindow.ShowDialog();
         }
 
         #endregion

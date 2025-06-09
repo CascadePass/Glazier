@@ -126,6 +126,12 @@
   <data name="AlgorithmDescription_Prism" xml:space="preserve">
     <value>Fast, good for simple backgrounds</value>
   </data>
+  <data name="AlgorithmMethod_Onyx" xml:space="preserve">
+    <value>Use machine learning to identify the subject.</value>
+  </data>
+  <data name="AlgorithmMethod_Prism" xml:space="preserve">
+    <value>Replace a (the most common?) color with transparent.</value>
+  </data>
   <data name="B" xml:space="preserve">
     <value>B</value>
   </data>

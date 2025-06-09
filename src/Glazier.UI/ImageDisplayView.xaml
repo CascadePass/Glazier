@@ -9,25 +9,21 @@
     <Border
         x:Name="ImagePreviewSection"
         Style="{DynamicResource ImagesBorderStyle}"
-        Visibility="{Binding GlazierViewModel.IsImageLoaded, Converter={StaticResource boolToVisibility}}">
+        Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="{Binding OriginalImageColumnWidth}" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <!--<InkCanvas
-                Name="InkCanvasContainer"
-                EditingMode="None"
-                Margin="0"
-                Background="{x:Null}"
-                HorizontalAlignment="Center"
-                MaxWidth="400"
-                Visibility="{Binding Settings.ShowOriginalImage, Converter={StaticResource boolToVisibility}}">-->
             <Image
                 x:Name="DisplayImage"
-                Grid.Column="0"
+                Grid.Column="0" Grid.Row="0"
                 Source="{Binding GlazierViewModel.ImageData}"
                 Stretch="Uniform"
                 Cursor="Cross"
@@ -35,11 +31,10 @@
                 HorizontalAlignment="Stretch"
                 MouseDown="DisplayImage_MouseDown"
                 />
-            <!--</InkCanvas>-->
 
             <GridSplitter
                 x:Name="ImageSizeGridSplitter"
-                Grid.Column="1"
+                Grid.Column="1" Grid.Row="0"
                 Width="3"
                 VerticalAlignment="Stretch"
                 HorizontalAlignment="Stretch"
@@ -48,8 +43,21 @@
 
             <local:ImageEditor
                 x:Name="PreviewImage"
-                Grid.Column="2"
+                Grid.Column="2" Grid.Row="0"
                 GlazierViewModel="{Binding GlazierViewModel}" />
+
+            <Slider
+                x:Name="ColorTolerance"
+                Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                Minimum="0"
+                Maximum="255"
+                Margin="-3,0,0,0"
+                Value="{Binding GlazierViewModel.ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="{Binding GlazierViewModel.ColorSimilarityThreshold, UpdateSourceTrigger=PropertyChanged}"
+                Visibility="{Binding IsImageLoaded, Converter={StaticResource boolToVisibility}}"
+                >
+            </Slider>
+
         </Grid>
     </Border>
 </UserControl>

@@ -1,8 +1,4 @@
-﻿#region Using directives
-
-#endregion
-
-namespace CascadePass.Glazier.UI
+﻿namespace CascadePass.Glazier.UI
 {
     public enum GlazeMethod
     {

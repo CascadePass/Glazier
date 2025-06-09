@@ -88,6 +88,24 @@ namespace CascadePass.Glazier.UI {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use machine learning to identify the subject..
+        /// </summary>
+        public static string AlgorithmMethod_Onyx {
+            get {
+                return ResourceManager.GetString("AlgorithmMethod_Onyx", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replace a (the most common?) color with transparent..
+        /// </summary>
+        public static string AlgorithmMethod_Prism {
+            get {
+                return ResourceManager.GetString("AlgorithmMethod_Prism", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to B.
         /// </summary>
         public static string B {

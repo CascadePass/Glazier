@@ -85,6 +85,20 @@ namespace CascadePass.Glazier.UI
 
         private void WorkspaceViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (e.PropertyName == nameof(WorkspaceViewModel.IsImageNeeded))
+            {
+                //BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.InkCanvasContainer, InkCanvas.VisibilityProperty));
+                BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.ImageSizeGridSplitter, InkCanvas.VisibilityProperty));
+
+                BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.PreviewImage, ImageEditor.GlazierViewModelProperty));
+            }
+            else if (e.PropertyName == nameof(WorkspaceViewModel.IsImageLoaded))
+            {
+                //BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.InkCanvasContainer, InkCanvas.VisibilityProperty));
+                BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.ImageSizeGridSplitter, InkCanvas.VisibilityProperty));
+
+                BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.PreviewImage, ImageEditor.GlazierViewModelProperty));
+            }
         }
 
         private void GlazierViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -96,20 +110,6 @@ namespace CascadePass.Glazier.UI
                 //BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.InkCanvasContainer, InkCanvas.VisibilityProperty));
                 BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.DisplayImage, Image.SourceProperty));
  
-                BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.PreviewImage, ImageEditor.GlazierViewModelProperty));
-            }
-            else if (e.PropertyName == nameof(GlazierViewModel.IsImageNeeded))
-            {
-                //BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.InkCanvasContainer, InkCanvas.VisibilityProperty));
-                BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.ImageSizeGridSplitter, InkCanvas.VisibilityProperty));
-
-                BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.PreviewImage, ImageEditor.GlazierViewModelProperty));
-            }
-            else if (e.PropertyName == nameof(GlazierViewModel.IsImageLoaded))
-            {
-                //BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.InkCanvasContainer, InkCanvas.VisibilityProperty));
-                BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.ImageSizeGridSplitter, InkCanvas.VisibilityProperty));
-
                 BindingUtility.UpdateBinding(BindingOperations.GetBindingExpression(this.PreviewImage, ImageEditor.GlazierViewModelProperty));
             }
         }

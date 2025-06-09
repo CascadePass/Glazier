@@ -56,31 +56,6 @@
                 <Image Source="/Images/Icons/Settings.png" Width="20" Height="20" />
             </ToggleButton>
 
-            <Popup
-                x:Name="SettingsPopup"
-                StaysOpen="False"
-                IsOpen="{Binding IsSettingsExpanded, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                PlacementTarget="{Binding ElementName=SettingsToggleButton}">
-
-                <ComboBox
-                        Margin="0,4,0,4"
-                        ItemsSource="{Binding GlazeMethods}"
-                        SelectedValue="{Binding GlazeMethod, Mode=TwoWay}"
-                        SelectedValuePath="Method"
-                        >
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="{Binding IconPath}" Width="20" Height="20" />
-                                <TextBlock Text="{Binding Name}" Margin="5,0,0,0" />
-                                <TextBlock Text="{Binding Description}" Margin="5,0,0,0" FontStyle="Italic" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-
-            </Popup>
-
             <ToggleButton
                 x:Name="OutputSizeToggleButton"
                 IsChecked="{Binding IsSizeExpanded, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
@@ -118,9 +93,9 @@
 
             <local:ColorPicker
                 x:Name="ColorPicker"
-                SelectedColor="{Binding ReplacementColor}"
-                SuggestedColors="{Binding ImageColors}"
-                Background="{Binding ReplacementColor, Converter={StaticResource colorToBrush}}"
+                SelectedColor="{Binding GlazierViewModel.ReplacementColor}"
+                SuggestedColors="{Binding GlazierViewModel.ImageColors}"
+                Background="{Binding GlazierViewModel.ReplacementColor, Converter={StaticResource colorToBrush}}"
                 MinWidth="100"
                 Visibility="{Binding IsUsingColorReplacement, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource boolToVisibility}}"
                 />

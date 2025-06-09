@@ -410,4 +410,37 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+
+
+    <Style x:Key="SegmentedRadioButtonStyle" TargetType="RadioButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="1"
+                        Padding="8">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="{DynamicResource AlgorithmSelectorButtonBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AlgorithmSelectorButtonBorderBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource AlgorithmSelectorButtonTextForegroundBrush}"/>
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AlgorithmSelectorCheckedButtonBackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource AlgorithmSelectorCheckedButtonBorderBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource AlgorithmSelectorCheckedButtonTextForegroundBrush}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AlgorithmSelectorMouseOverButtonBackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource AlgorithmSelectorMouseOverButtonBorderBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource AlgorithmSelectorMouseOverButtonTextForegroundBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
 </ResourceDictionary>

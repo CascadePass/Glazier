@@ -26,7 +26,6 @@
         </InkCanvas>
 
         <local:LivePreviewToolbar
-            DataContext="{Binding GlazierViewModel, RelativeSource={RelativeSource AncestorType=UserControl}}"
             GlazierViewModel="{Binding GlazierViewModel, RelativeSource={RelativeSource AncestorType=UserControl}}"
             WorkspaceViewModel="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
             BackgroundRemovalMethod="{Binding GlazierViewModel.GlazeMethod, RelativeSource={RelativeSource AncestorType=UserControl}}"

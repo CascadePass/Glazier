@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 using System.Linq;
@@ -39,14 +38,17 @@ namespace CascadePass.Glazier.UI.Tests
             // Background brush should be set (not blank)
             Assert.IsNotNull(defaultSettings.BackgroundBrushKey);
 
+            // Resizing options should not be empty
             Assert.IsFalse(defaultSettings.ResizingOptions is null || defaultSettings.ResizingOptions.Count == 0, "No resizing options");
         }
 
         [TestMethod]
         public void PropertyChange_Should_UpdateValue()
         {
-            var settings = new Settings();
-            settings.FontSize = 16;
+            var settings = new Settings
+            {
+                FontSize = 16
+            };
 
             Assert.AreEqual(16, settings.FontSize);
         }
@@ -96,7 +98,6 @@ namespace CascadePass.Glazier.UI.Tests
             Settings.LoadFromFile("NonExistentFile.json", jsonOptions);
         }
 
-
         [TestMethod]
         public void BackgroundBrushKey_RejectsInvalidBrushKeys()
         {
@@ -127,6 +128,12 @@ namespace CascadePass.Glazier.UI.Tests
             Assert.IsTrue(Settings.GetDefaultSizes().Any(s => s.Width == 64 && s.Height == 64));
             Assert.IsTrue(Settings.GetDefaultSizes().Any(s => s.Width == 128 && s.Height == 128));
             Assert.IsTrue(Settings.GetDefaultSizes().Any(s => s.Width == 256 && s.Height == 256));
+        }
+
+        [TestMethod]
+        public void GetApplicationName_ReturnsKnownValue()
+        {
+            Assert.AreEqual("GlazierTestHost", Settings.GetApplicationName(), "Application name should be 'GlazierTestHost' in unit tests.");
         }
 
         #region Validation Methods

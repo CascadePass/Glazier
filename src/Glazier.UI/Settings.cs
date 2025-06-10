@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -190,13 +191,15 @@ namespace CascadePass.Glazier.UI
 
         #endregion
 
+        #region Static Methods
+
         public static Settings GetDefault()
         {
             return new()
             {
                 SettingsFilename = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    "Glazier",
+                    Settings.GetApplicationName(),
                     "Settings.json"
                 ),
 
@@ -220,6 +223,14 @@ namespace CascadePass.Glazier.UI
             };
         }
 
+        internal static string GetApplicationName() => Assembly.GetEntryAssembly()?.GetName()?.Name switch
+        {
+            null => "Glazier",
+            "Glazier.UI" => "Glazier",
+            "testhost" => "GlazierTestHost",
+            var name => name
+        };
+
         internal static ObservableCollection<Size> GetDefaultSizes() => [
             new(16, 16),
             new(32, 32),
@@ -227,6 +238,8 @@ namespace CascadePass.Glazier.UI
             new(128, 128),
             new(256, 256),
         ];
+
+        #endregion
 
         #region Serialization
 
@@ -295,11 +308,11 @@ namespace CascadePass.Glazier.UI
         public async Task SaveAsync()
         {
             // Cancel previous pending save request (if any)
-            saveCancellationTokenSource.Cancel();
-            saveCancellationTokenSource = new CancellationTokenSource();
-            var token = saveCancellationTokenSource.Token;
+            this.saveCancellationTokenSource.Cancel();
+            this.saveCancellationTokenSource = new CancellationTokenSource();
+            var token = this.saveCancellationTokenSource.Token;
 
-            await saveSemaphore.WaitAsync(token);
+            await Settings.saveSemaphore.WaitAsync(token);
             try
             {
                 if (token.IsCancellationRequested) return; // Skip if a newer request came in
@@ -307,7 +320,7 @@ namespace CascadePass.Glazier.UI
             }
             finally
             {
-                saveSemaphore.Release();
+                Settings.saveSemaphore.Release();
             }
         }
 

@@ -87,6 +87,53 @@ namespace CascadePass.Glazier.UI
 
         #region Properties
 
+
+        #region Settings
+
+        public string SettingsFilename { get; set; }
+
+        /// <summary>
+        /// Gets or sets the application settings.
+        /// </summary>
+        /// <remarks>When the settings are updated, the property ensures that event handlers for property
+        /// changes are properly managed. Assigning a new value will detach event handlers from the old settings
+        /// instance (if any) and attach them to the new instance.</remarks>
+        /// <exception cref="ArgumentNullException">Thrown when the value is set to null.</exception>"
+        public Settings Settings
+        {
+            get => this.settings;
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(nameof(value), "Settings cannot be null.");
+                }
+
+                var old = this.settings;
+                bool changed = this.SetPropertyValue(ref this.settings, value, nameof(this.Settings));
+
+                if (changed)
+                {
+                    if (old is not null)
+                    {
+                        old.PropertyChanged -= this.Settings_PropertyChanged;
+                    }
+
+                    this.Settings.PropertyChanged += this.Settings_PropertyChanged;
+                }
+            }
+        }
+
+        #endregion
+
+        #region GlazierViewModel
+
+        /// <summary>
+        /// Gets or sets the view model for the glazier component.
+        /// </summary>
+        /// <remarks>When the property value changes, event handlers are updated to reflect the new
+        /// instance.  Ensure that the new value is properly initialized before setting this property to avoid
+        /// unexpected behavior.</remarks>
         public GlazierViewModel GlazierViewModel
         {
             get => this.glazierViewModel;
@@ -109,30 +156,9 @@ namespace CascadePass.Glazier.UI
             }
         }
 
-        public Settings Settings
-        {
-            get => this.settings;
-            set
-            {
-                if (value == null)
-                {
-                    throw new System.ArgumentNullException(nameof(value), "Settings cannot be null.");
-                }
+        #endregion
 
-                var old = this.settings;
-                bool changed = this.SetPropertyValue(ref this.settings, value, nameof(this.Settings));
-
-                if (changed)
-                {
-                    if (old is not null)
-                    {
-                        old.PropertyChanged -= this.Settings_PropertyChanged;
-                    }
-
-                    this.Settings.PropertyChanged += this.Settings_PropertyChanged;
-                }
-            }
-        }
+        #region SettingsViewModel
 
         public SettingsViewModel SettingsViewModel
         {
@@ -158,13 +184,13 @@ namespace CascadePass.Glazier.UI
             }
         }
 
+        #endregion
+
         public ObservableCollection<GlazeMethodViewModel> AvailableGlazeMethods
         {
             get => this.availableGlazeMethods;
             set => this.SetPropertyValue(ref this.availableGlazeMethods, value, nameof(this.AvailableGlazeMethods));
         }
-
-        public string SettingsFilename { get; set; }
 
         public bool IsSettingsPageVisible
         {

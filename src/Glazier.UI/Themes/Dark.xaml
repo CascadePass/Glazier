@@ -13,10 +13,10 @@
     <SolidColorBrush x:Key="MouseOverImageBorderBrush" Color="Orange"/>
 
     <SolidColorBrush x:Key="AlgorithmSelectorButtonBackgroundBrush" Color="Bisque"/>
+    <SolidColorBrush x:Key="AlgorithmSelectorButtonBorderBrush" Color="Red"/>
     <SolidColorBrush x:Key="AlgorithmSelectorButtonTextForegroundBrush" Color="Black"/>
     <SolidColorBrush x:Key="AlgorithmSelectorCheckedButtonBackgroundBrush" Color="Orange"/>
     <SolidColorBrush x:Key="AlgorithmSelectorCheckedButtonTextForegroundBrush" Color="Red"/>
-    <SolidColorBrush x:Key="AlgorithmSelectorMouseOverButtonTextForegroundBrush" Color="Red"/>
 
 
     <LinearGradientBrush x:Key="SplitterBrush" StartPoint="0,0" EndPoint="1,1">

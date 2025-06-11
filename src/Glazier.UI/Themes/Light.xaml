@@ -12,7 +12,7 @@
     <SolidColorBrush x:Key="ToolbarBorderBrush" Color="DarkGray"/>
     <SolidColorBrush x:Key="MouseOverImageBorderBrush" Color="Green"/>
 
-    <SolidColorBrush x:Key="AlgorithmSelectorButtonBackgroundBrush" Color="Transparent"/>
+    <SolidColorBrush x:Key="AlgorithmSelectorButtonBackgroundBrush" Color="Bisque"/>
     <SolidColorBrush x:Key="AlgorithmSelectorButtonBorderBrush" Color="Red"/>
     <SolidColorBrush x:Key="AlgorithmSelectorButtonTextForegroundBrush" Color="Black"/>
     <SolidColorBrush x:Key="AlgorithmSelectorCheckedButtonBackgroundBrush" Color="Orange"/>

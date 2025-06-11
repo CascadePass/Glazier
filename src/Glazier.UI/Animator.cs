@@ -138,5 +138,30 @@ namespace CascadePass.Glazier.UI
         }
 
         #endregion
+
+        #region Algorithm selection
+
+        public static void SelectAlgorithmRadioButton(RadioButton selectedButton, FrameworkElement glazeMethodSelector, TranslateTransform highlightTransform, FrameworkElement selectionHighlight)
+        {
+            var transform = selectedButton.TransformToVisual(glazeMethodSelector);
+            var position = transform.Transform(new Point(0, 0));
+
+            double dpiFactor = VisualTreeHelper.GetDpi(selectedButton).PixelsPerDip;
+            double buttonCenterY = position.Y - (selectedButton.ActualHeight / 4) * dpiFactor;
+
+            var animation = new DoubleAnimation
+            {
+                To = buttonCenterY,
+                Duration = TimeSpan.FromSeconds(0.3),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+
+            highlightTransform.BeginAnimation(TranslateTransform.YProperty, animation);
+
+            // Match the indicator height to the selected button's height
+            selectionHighlight.Height = selectedButton.ActualHeight;
+        }
+
+        #endregion
     }
 }

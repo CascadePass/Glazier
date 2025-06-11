@@ -70,7 +70,7 @@ namespace CascadePass.Glazier.UI {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Slower, better for complex backgrounds.
+        ///   Looks up a localized string similar to Slower, better for complex backgrounds..
         /// </summary>
         public static string AlgorithmDescription_Onyx {
             get {
@@ -79,7 +79,7 @@ namespace CascadePass.Glazier.UI {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fast, good for simple backgrounds.
+        ///   Looks up a localized string similar to Fast, good for simple backgrounds..
         /// </summary>
         public static string AlgorithmDescription_Prism {
             get {
@@ -88,7 +88,7 @@ namespace CascadePass.Glazier.UI {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use machine learning to identify the subject..
+        ///   Looks up a localized string similar to Use machine learning to identify the subject, generate a mask, and make everything else transparent..
         /// </summary>
         public static string AlgorithmMethod_Onyx {
             get {
@@ -97,7 +97,7 @@ namespace CascadePass.Glazier.UI {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replace a (the most common?) color with transparent..
+        ///   Looks up a localized string similar to Replace a color, usually the most common one, with transparent pixels..
         /// </summary>
         public static string AlgorithmMethod_Prism {
             get {

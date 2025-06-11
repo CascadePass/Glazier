@@ -426,6 +426,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="MinHeight" Value="100" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="Foreground" Value="{DynamicResource AlgorithmSelectorButtonTextForegroundBrush}"/>
         <Style.Triggers>

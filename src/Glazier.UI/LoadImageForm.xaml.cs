@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -36,6 +37,9 @@ namespace CascadePass.Glazier.UI
         {
             if (sender is RadioButton selectedButton)
             {
+                SelectionHighlight.UpdateLayout();
+                GlazeMethodSelector.InvalidateArrange();
+
                 Animator.SelectAlgorithmRadioButton(selectedButton, this.GlazeMethodSelector, this.HighlightTransform, this.SelectionHighlight);
             }
         }

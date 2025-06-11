@@ -10,13 +10,6 @@
         x:Name="InputFormBorder"
         Style="{DynamicResource OuterBorderStyle}">
         <StackPanel>
-            <TextBlock
-                x:Name="InputFileLabel"
-                Text="{x:Static local:Resources.Label_SourceFile}"
-                Visibility="{Binding IsImageNeeded, Converter={StaticResource boolToVisibility}}"
-                Style="{DynamicResource FormLabel}"
-                />
-
             <local:CommandTextBox
                 x:Name="InputFile"
                 Margin="0,4,0,0"
@@ -30,97 +23,90 @@
                 />
 
 
-            <TextBlock
-                x:Name="AlgorithmLabel"
-                Margin="0,12,0,0"
-                Text="{x:Static local:Resources.Algorithm}"
-                Visibility="{Binding IsImageNeeded, Converter={StaticResource boolToVisibility}}"
-                Style="{DynamicResource FormLabel}"
-                />
-
-            <Border Background="{DynamicResource AlgorithmSelectorButtonBackgroundBrush}" Margin="0,4,0,4" CornerRadius="12">
+            <Border Background="{DynamicResource AlgorithmSelectorButtonBackgroundBrush}" Margin="0,40,0,4" CornerRadius="12">
                 <Grid>
-                <!-- Selection Indicator -->
-                <Border
-                    x:Name="SelectionHighlight"
-                    CornerRadius="8"
-                    Background="{DynamicResource AlgorithmSelectorCheckedButtonBackgroundBrush}"
-                    RenderTransformOrigin="0.5,0.5">
-                    <Border.RenderTransform>
-                        <TranslateTransform x:Name="HighlightTransform"/>
-                    </Border.RenderTransform>
-                </Border>
+                    <!-- Selection Indicator -->
+                    <Border
+                        x:Name="SelectionHighlight"
+                        CornerRadius="8"
+                        Background="{DynamicResource AlgorithmSelectorCheckedButtonBackgroundBrush}"
+                        RenderTransformOrigin="0.5,0.5">
+                        <Border.RenderTransform>
+                            <TranslateTransform x:Name="HighlightTransform"/>
+                        </Border.RenderTransform>
+                    </Border>
 
-                <ItemsControl x:Name="GlazeMethodSelector" ItemsSource="{Binding AvailableGlazeMethods}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <RadioButton
-                                IsEnabled="{Binding IsEnabled}"
-                                IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                                Style="{StaticResource SegmentedRadioButtonStyle}"
-                                HorizontalAlignment="Left"
-                                GroupName="GlazeMethodSelectionRadioGroup"
-                                Checked="RadioButton_Checked"
-                                Loaded="RadioButton_Loaded">
+                    <ItemsControl x:Name="GlazeMethodSelector" ItemsSource="{Binding AvailableGlazeMethods}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <RadioButton
+                                    AutomationProperties.Name="{Binding Name}"
+                                    IsEnabled="{Binding IsEnabled}"
+                                    IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                    Style="{StaticResource SegmentedRadioButtonStyle}"
+                                    HorizontalAlignment="Left"
+                                    GroupName="GlazeMethodSelectionRadioGroup"
+                                    Checked="RadioButton_Checked"
+                                    Loaded="RadioButton_Loaded">
 
-                                <DockPanel HorizontalAlignment="Left">
-                                    <Image
-                                        DockPanel.Dock="Left"
-                                        Source="{Binding IconPath}"
-                                        HorizontalAlignment="Left"
-                                        Style="{DynamicResource Icon}" Height="64" Width="64" />
+                                    <DockPanel HorizontalAlignment="Left">
+                                        <Image
+                                            DockPanel.Dock="Left"
+                                            Source="{Binding IconPath}"
+                                            HorizontalAlignment="Left"
+                                            Style="{DynamicResource Icon}" Height="64" Width="64" />
 
-                                    <Grid Margin="8,0,0,0">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
+                                        <Grid Margin="8,0,0,0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
 
-                                        <TextBlock
-                                            Grid.Row="0"                                        
-                                            FontSize="{DynamicResource FontSize.Large}"
-                                            FontWeight="Bold"
-                                            Margin="0,0,0,4"
-                                            Text="{Binding Name}" />
+                                            <TextBlock
+                                                Grid.Row="0"                                        
+                                                FontSize="{DynamicResource FontSize.Large}"
+                                                FontWeight="Bold"
+                                                Margin="0,0,0,4"
+                                                Text="{Binding Name}" />
 
-                                        <TextBlock
-                                            Grid.Row="1"
-                                            FontSize="{DynamicResource FontSize.Medium}"
-                                            TextWrapping="Wrap">
-                                            <Run Text="{Binding MethodDescription}" />
-                                            <Run Text="{Binding Description}" FontStyle="Italic" />
-                                        </TextBlock>
+                                            <TextBlock
+                                                Grid.Row="1"
+                                                FontSize="{DynamicResource FontSize.Medium}"
+                                                TextWrapping="Wrap">
+                                                <Run Text="{Binding MethodDescription}" />
+                                                <Run Text="{Binding Description}" FontStyle="Italic" />
+                                            </TextBlock>
 
-                                        <TextBlock
-                                            Grid.Row="2"
-                                            FontStyle="Italic"
-                                            Visibility="{Binding ModelPath, Converter={StaticResource nullOrWhitespaceToVisibility}}">
-                                            <Run Text="Model:" />
-                                            <Hyperlink>
-                                                <Run Text="{Binding ModelPath}" />
-                                            </Hyperlink>
-                                        </TextBlock>
+                                            <TextBlock
+                                                Grid.Row="2"
+                                                FontStyle="Italic"
+                                                Visibility="{Binding ModelPath, Converter={StaticResource nullOrWhitespaceToVisibility}}">
+                                                <Run Text="Model:" />
+                                                <Hyperlink>
+                                                    <Run Text="{Binding ModelPath}" />
+                                                </Hyperlink>
+                                            </TextBlock>
 
-                                        <TextBlock
-                                            Grid.Row="3"
-                                            FontWeight="Bold"
-                                            Text="{Binding CurrentStatus}"
-                                            Visibility="{Binding CurrentStatus, Converter={StaticResource nullOrWhitespaceToVisibility}}"
-                                            Margin="0,4,0,0" />
-                                    </Grid>
-                                </DockPanel>
-                            </RadioButton>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </Grid>
+                                            <TextBlock
+                                                Grid.Row="3"
+                                                FontWeight="Bold"
+                                                Text="{Binding CurrentStatus}"
+                                                Visibility="{Binding CurrentStatus, Converter={StaticResource nullOrWhitespaceToVisibility}}"
+                                                Margin="0,4,0,0" />
+                                        </Grid>
+                                    </DockPanel>
+                                </RadioButton>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
             </Border>
         </StackPanel>
     </Border>

@@ -15,12 +15,31 @@
                 Margin="0,4,0,0"
                 InsetText="{x:Static local:Resources.Label_SourceFile}"
                 InsetIcon="/Images/Icons/FolderOpenBlue.png"
-                CommandIcon="/Images/Icons/FolderOpened.png"
-                Command="{Binding BrowseForImageFileCommand}"
                 Opacity=".7"
                 UserText="{Binding SourceFilename}"
-                Visibility="{Binding IsImageNeeded, Converter={StaticResource boolToVisibility}}"
-                />
+                Visibility="{Binding IsImageNeeded, Converter={StaticResource boolToVisibility}}">
+                <local:CommandTextBox.Buttons>
+                    <Button
+                        Command="{Binding EditSettingsCommand, Mode=OneWay}"
+                        ToolTip="{x:Static local:Resources.Settings}"
+                        AutomationProperties.Name="{x:Static local:Resources.Settings}"
+                        BorderBrush="Transparent"
+                        Background="Transparent"
+                        >
+                        <Image Source="/Images/Icons/Settings.png" Style="{DynamicResource Icon}" />
+                    </Button>
+
+                    <Button
+                        Command="{Binding BrowseForImageFileCommand, Mode=OneWay}"
+                        ToolTip="{x:Static local:Resources.Label_SourceFile}"
+                        AutomationProperties.Name="{x:Static local:Resources.Label_SourceFile}"
+                        BorderBrush="Transparent"
+                        Background="Transparent"
+                        >
+                        <Image Source="/Images/Icons/FolderOpened.png"  Style="{DynamicResource Icon}" />
+                    </Button>
+                </local:CommandTextBox.Buttons>
+            </local:CommandTextBox>
 
 
             <Border Background="{DynamicResource AlgorithmSelectorButtonBackgroundBrush}" Margin="0,40,0,4" CornerRadius="12">

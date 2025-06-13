@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -33,10 +36,14 @@ namespace CascadePass.Glazier.UI
                 typeof(string), typeof(CommandTextBox), new PropertyMetadata(string.Empty)
             );
 
-
         public static readonly DependencyProperty CommandProperty =
             DependencyProperty.Register("Command",
                 typeof(ICommand), typeof(CommandTextBox), new PropertyMetadata(null)
+            );
+
+        public static readonly DependencyProperty ButtonsProperty =
+            DependencyProperty.Register("Buttons",
+                typeof(ObservableCollection<Button>), typeof(CommandTextBox), new PropertyMetadata(null)
             );
 
         #endregion
@@ -44,6 +51,7 @@ namespace CascadePass.Glazier.UI
         public CommandTextBox()
         {
             this.InitializeComponent();
+            this.Buttons = [];
         }
 
         #region Dependency Properties (Getters/Setters)
@@ -76,6 +84,49 @@ namespace CascadePass.Glazier.UI
         {
             get { return (ICommand)GetValue(CommandProperty); }
             set { SetValue(CommandProperty, value); }
+        }
+
+        public ObservableCollection<Button> Buttons
+        {
+            get { return (ObservableCollection<Button>)GetValue(ButtonsProperty); }
+            set
+            {
+                if (this.Buttons != null)
+                {
+                    this.Buttons.CollectionChanged -= this.Buttons_CollectionChanged;
+                }
+
+                SetValue(ButtonsProperty, value);
+
+                if (value != null)
+                {
+                    value.CollectionChanged += this.Buttons_CollectionChanged;
+                }
+
+                this.UpdateContentPresenter();
+            }
+        }
+
+        public bool IsSingleButton => this.Buttons is null || this.Buttons.Count == 0;
+
+        private void Buttons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.UpdateContentPresenter();
+        }
+
+        private void UpdateContentPresenter()
+        {
+            var panel = new StackPanel { Orientation = Orientation.Horizontal };
+
+            foreach (var button in Buttons)
+            {
+                var parent = LogicalTreeHelper.GetParent(button) as Panel;
+                parent?.Children.Remove(button);
+                panel.Children.Add(button);
+            }
+
+            this.ButtonsPresenter.Content = panel;
+            this.ButtonsPresenter.UpdateLayout();
         }
 
         #endregion

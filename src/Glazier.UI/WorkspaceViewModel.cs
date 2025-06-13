@@ -35,7 +35,7 @@ namespace CascadePass.Glazier.UI
         private IThemeListener themeListener;
         private IFileDialogProvider dialogProvider;
 
-        private DelegateCommand browseForImageFile, saveImageData, viewLargePreviewCommand, viewMaskCommand;
+        private DelegateCommand browseForImageFile, saveImageData, viewLargePreviewCommand, viewMaskCommand, editSettingsCommand;
 
         #endregion
 
@@ -299,6 +299,8 @@ namespace CascadePass.Glazier.UI
 
         public ICommand ViewMaskCommand => this.viewMaskCommand ??= new(this.ViewMaskImplementation);
 
+        public ICommand EditSettingsCommand => this.editSettingsCommand ??= new(this.EditSettingsImplementation);
+
         #endregion
 
 
@@ -509,6 +511,12 @@ namespace CascadePass.Glazier.UI
             };
 
             previewWindow.ShowDialog();
+        }
+
+        internal void EditSettingsImplementation()
+        {
+            this.IsSettingsPageVisible = true;
+            this.SettingsViewModel.IsSettingsPageOpen = true;
         }
 
         #endregion
